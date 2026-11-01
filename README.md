@@ -1267,3 +1267,8 @@ You can prepare the benchmark on GitHub's runner instead of downloading the data
 5. Download the artifact named issuedupeslite-benchmark from the Artifacts section.
 
 The generated benchmark is stored as a temporary GitHub Actions artifact for 30 days. It is not committed to the repository's Git history. This keeps third-party issue text out of the source repository while still letting you download the prepared CSV files. See the workflow file at .github/workflows/benchmark-data.yml and the full benchmark instructions at evaluation/benchmark/README.md.
+
+
+### Phase 2: baseline measurement
+
+The current duplicate detector has now been measured on the held-out IssueDupesLite test split without changing its logic. At the existing 0.48 threshold, it recorded 87.28% precision and 10.13% recall against the benchmark labels. These are not definitive real-world accuracy claims because the benchmark negatives are weak/unverified. See [the full evaluation notes](docs/EVALUATION.md) and [the reproducible evaluator](evaluation/benchmark/evaluate_baseline.py).
