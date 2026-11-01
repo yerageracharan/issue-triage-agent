@@ -111,3 +111,22 @@ python -m pytest tests/test_benchmark.py
 ~~~
 
 The tests use tiny synthetic fixtures and verify deterministic sampling, transitive duplicate exclusion, repository-level split isolation, chronology handling, and output files. They do not pretend to validate the real-world detector.
+
+
+## Run the download and preparation on GitHub
+
+You do not need to upload the original dataset yourself. The repository includes a GitHub Actions workflow that downloads the public Hugging Face dataset directly on a GitHub-hosted runner, prepares the files, validates the outputs, and uploads a downloadable artifact.
+
+1. Open the [Issue Triage Agent Actions tab](https://github.com/yerageracharan/issue-triage-agent/actions).
+2. Select **Prepare duplicate-detection benchmark** in the workflow list.
+3. Click **Run workflow**.
+4. For the first run, keep seed 42, negative ratio 1.0, and hard-negative fraction 0.5.
+5. Open the run after it finishes.
+6. In the Artifacts section near the bottom of the run page, download the artifact whose name begins with issuedupeslite-benchmark.
+7. Unzip it. It contains positive_pairs.csv, negative_pairs.csv, repository_splits.csv, train.csv, validation.csv, test.csv, manifest.json, and ATTRIBUTION.md.
+
+The workflow runs the benchmark preparation unit tests first. After downloading and preparing the dataset, it validates that every repository belongs to only one split, no pair ID occurs in multiple splits, weak negatives carry their warning label, and the split totals match the manifest.
+
+The artifact is retained for 30 days. It is deliberately not committed to the Git repository: these files contain third-party GitHub issue text derived from IssueDupesLite, whose declared licence is CC-BY-SA-4.0. Keep the generated ATTRIBUTION.md alongside the files when you use or redistribute the derived benchmark.
+
+You can also download the original dataset yourself from [Hugging Face — IssueDupesLite](https://huggingface.co/datasets/primordic/IssueDupesLite). The GitHub Actions route is easier because it performs the same preparation and validation automatically.
