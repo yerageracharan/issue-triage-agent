@@ -10,6 +10,7 @@ on:
       - ".github/workflows/benchmark-data.yml"
       - "tests/test_benchmark.py"
       - "tests/test_baseline_evaluation.py"
+      - "tests/test_similarity_experiments.py"
       - "pyproject.toml"
   workflow_dispatch:
     inputs:
@@ -40,7 +41,7 @@ jobs:
   prepare-and-validate:
     name: Download, prepare, and validate
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     env:
       BENCHMARK_SEED: ${{ github.event.inputs.seed || '42' }}
       NEGATIVE_RATIO: ${{ github.event.inputs.negative_ratio || '1.0' }}
@@ -56,13 +57,16 @@ jobs:
           python-version: "3.11"
           cache: pip
 
-      - name: Install benchmark and test dependencies
+      - name: Install CPU-only PyTorch
+        run: python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install benchmark, test, and similarity experiment dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e ".[benchmark,test]"
+          python -m pip install -e ".[benchmark,test,similarity-experiments]"
 
       - name: Test benchmark preparation and baseline evaluation logic
-        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py
+        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py tests/test_similarity_experiments.py
 
       - name: Download IssueDupesLite and prepare repository-level splits
         run: |
@@ -188,7 +192,10 @@ jobs:
       - name: Run unchanged duplicate-detector baseline on held-out test split
         run: python -m evaluation.benchmark.evaluate_baseline --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --output-dir evaluation/benchmark/generated/baseline
 
-      - name: Upload prepared benchmark and baseline results and baseline results
+      - name: Compare lexical, BM25, semantic, and hybrid methods on validation split
+        run: python -m evaluation.benchmark.evaluate_similarity_methods --train-csv evaluation/benchmark/generated/train.csv --validation-csv evaluation/benchmark/generated/validation.csv --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase3
+
+      - name: Upload benchmark, baseline, and Phase 3 comparison
         uses: actions/upload-artifact@v4
         with:
           name: issuedupeslite-benchmark-${{ github.run_number }}
