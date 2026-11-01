@@ -82,7 +82,10 @@ jobs:
           import csv
           import json
           import os
+          import sys
           from pathlib import Path
+
+          csv.field_size_limit(sys.maxsize)
 
           root = Path("evaluation/benchmark/generated")
           required = [
