@@ -1272,3 +1272,8 @@ The generated benchmark is stored as a temporary GitHub Actions artifact for 30 
 ### Phase 2: baseline measurement
 
 The current duplicate detector has now been measured on the held-out IssueDupesLite test split without changing its logic. At the existing 0.48 threshold, it recorded 87.28% precision and 10.13% recall against the benchmark labels. These are not definitive real-world accuracy claims because the benchmark negatives are weak/unverified. See [the full evaluation notes](docs/EVALUATION.md) and [the reproducible evaluator](evaluation/benchmark/evaluate_baseline.py).
+
+
+### Phase 3: compare duplicate-detection methods
+
+The first validation comparison shows BM25 ahead of the current lexical method (ROC AUC 0.7031 vs 0.6541; average precision 0.6780 vs 0.6419). Local semantic embeddings and the hybrid are implemented, but their full comparison is still pending. These are validation findings, not final test-set or real-world accuracy claims. See [the evaluation record](docs/EVALUATION.md).
