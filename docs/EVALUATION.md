@@ -65,3 +65,10 @@ python -m evaluation.benchmark.prepare_benchmark --seed 42
 Generated source-derived data is placed in evaluation/benchmark/generated/, which is ignored by Git. This avoids accidentally committing a large copy of third-party issue text. The generated manifest records the source revision, dataset fingerprint, preparation settings, counts, and split distribution.
 
 This is a data-preparation milestone only. No duplicate-detection algorithm has been changed and no real-world precision/recall result is claimed until the prepared benchmark has been generated, checked, and evaluated.
+
+
+## GitHub Actions benchmark artifact
+
+The workflow at .github/workflows/benchmark-data.yml downloads IssueDupesLite on a GitHub-hosted runner, runs the benchmark preparation unit tests, generates the dataset, validates repository isolation and pair uniqueness, and uploads the generated benchmark directory as an Actions artifact with a 30-day retention period.
+
+The artifact is not committed to the source repository. This is intentional because it contains third-party issue text from the CC-BY-SA-4.0 source dataset. Keep ATTRIBUTION.md with any derived benchmark data you download.
