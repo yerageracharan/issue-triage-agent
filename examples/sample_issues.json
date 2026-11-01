@@ -1,0 +1,50 @@
+[
+  {
+    "number": 17,
+    "title": "Bug: application crashes when exporting CSV",
+    "body": "Steps to reproduce:\n1. Open a project.\n2. Select Export CSV.\n\nExpected behavior: a CSV file is downloaded.\nActual behavior: the application crashes.\nEnvironment: Windows 11, Python 3.12.\n\nTraceback: RuntimeError: export failed.",
+    "state": "open",
+    "html_url": "https://github.com/example/demo/issues/17",
+    "labels": [{"name": "bug"}],
+    "created_at": "2026-10-20T10:00:00Z",
+    "updated_at": "2026-10-20T10:00:00Z",
+    "comments": 2,
+    "user": {"login": "sample-user"}
+  },
+  {
+    "number": 18,
+    "title": "CSV export causes the application to crash",
+    "body": "Exporting a CSV causes the application to crash before the file is saved.",
+    "state": "open",
+    "html_url": "https://github.com/example/demo/issues/18",
+    "labels": [],
+    "created_at": "2026-10-21T10:00:00Z",
+    "updated_at": "2026-10-21T10:00:00Z",
+    "comments": 0,
+    "user": {"login": "another-user"}
+  },
+  {
+    "number": 19,
+    "title": "Feature request: add dark mode",
+    "body": "Please add support for a dark theme so the dashboard is easier to use at night. A proposed solution would be a theme toggle in settings.",
+    "state": "open",
+    "html_url": "https://github.com/example/demo/issues/19",
+    "labels": [{"name": "enhancement"}],
+    "created_at": "2026-10-22T10:00:00Z",
+    "updated_at": "2026-10-22T10:00:00Z",
+    "comments": 1,
+    "user": {"login": "sample-user"}
+  },
+  {
+    "number": 20,
+    "title": "Question: how do I configure the CLI?",
+    "body": "How do I configure the CLI for a private test environment? I have read the setup guide but am unsure which variables are required.",
+    "state": "open",
+    "html_url": "https://github.com/example/demo/issues/20",
+    "labels": [{"name": "question"}],
+    "created_at": "2026-10-23T10:00:00Z",
+    "updated_at": "2026-10-23T10:00:00Z",
+    "comments": 0,
+    "user": {"login": "sample-user"}
+  }
+]

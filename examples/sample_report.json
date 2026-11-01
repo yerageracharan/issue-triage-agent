@@ -1,0 +1,156 @@
+{
+  "repository": "example/demo",
+  "issue_count": 4,
+  "results": [
+    {
+      "issue": {
+        "number": 17,
+        "title": "Bug: application crashes when exporting CSV",
+        "body": "Steps to reproduce:\n1. Open a project.\n2. Select Export CSV.\n\nExpected behavior: a CSV file is downloaded.\nActual behavior: the application crashes.\nEnvironment: Windows 11, Python 3.12.\n\nTraceback: RuntimeError: export failed.",
+        "state": "open",
+        "html_url": "https://github.com/example/demo/issues/17",
+        "labels": [
+          "bug"
+        ],
+        "created_at": "2026-10-20T10:00:00Z",
+        "updated_at": "2026-10-20T10:00:00Z",
+        "comments": 2,
+        "author": "sample-user"
+      },
+      "category": "bug",
+      "priority": "P1",
+      "confidence": "high",
+      "rationale": [
+        "Matched existing label: bug",
+        "Potentially release-blocking or major workflow impact language detected."
+      ],
+      "suggested_labels": [
+        "type: bug",
+        "priority: p1"
+      ],
+      "missing_information": [],
+      "duplicate_candidates": [
+        {
+          "number": 18,
+          "title": "CSV export causes the application to crash",
+          "url": "https://github.com/example/demo/issues/18",
+          "similarity": 0.562
+        }
+      ],
+      "needs_attention": true,
+      "llm_summary": "",
+      "llm_follow_up": ""
+    },
+    {
+      "issue": {
+        "number": 18,
+        "title": "CSV export causes the application to crash",
+        "body": "Exporting a CSV causes the application to crash before the file is saved.",
+        "state": "open",
+        "html_url": "https://github.com/example/demo/issues/18",
+        "labels": [],
+        "created_at": "2026-10-21T10:00:00Z",
+        "updated_at": "2026-10-21T10:00:00Z",
+        "comments": 0,
+        "author": "another-user"
+      },
+      "category": "bug",
+      "priority": "P2",
+      "confidence": "high",
+      "rationale": [
+        "Matched wording: crash",
+        "Bug report defaults to P2 because no explicit severity signal was found."
+      ],
+      "suggested_labels": [
+        "type: bug",
+        "priority: p2",
+        "needs-triage"
+      ],
+      "missing_information": [
+        "Steps to reproduce",
+        "Expected behaviour",
+        "Actual behaviour",
+        "Environment and version details",
+        "A relevant error message, log, or minimal example (when available)"
+      ],
+      "duplicate_candidates": [
+        {
+          "number": 17,
+          "title": "Bug: application crashes when exporting CSV",
+          "url": "https://github.com/example/demo/issues/17",
+          "similarity": 0.562
+        }
+      ],
+      "needs_attention": true,
+      "llm_summary": "",
+      "llm_follow_up": ""
+    },
+    {
+      "issue": {
+        "number": 19,
+        "title": "Feature request: add dark mode",
+        "body": "Please add support for a dark theme so the dashboard is easier to use at night. A proposed solution would be a theme toggle in settings.",
+        "state": "open",
+        "html_url": "https://github.com/example/demo/issues/19",
+        "labels": [
+          "enhancement"
+        ],
+        "created_at": "2026-10-22T10:00:00Z",
+        "updated_at": "2026-10-22T10:00:00Z",
+        "comments": 1,
+        "author": "sample-user"
+      },
+      "category": "feature",
+      "priority": "P3",
+      "confidence": "high",
+      "rationale": [
+        "Matched existing label: enhancement",
+        "Feature requests default to P3 until impact and demand are assessed."
+      ],
+      "suggested_labels": [
+        "type: feature",
+        "priority: p3",
+        "needs-triage"
+      ],
+      "missing_information": [
+        "The user problem or use case"
+      ],
+      "duplicate_candidates": [],
+      "needs_attention": true,
+      "llm_summary": "",
+      "llm_follow_up": ""
+    },
+    {
+      "issue": {
+        "number": 20,
+        "title": "Question: how do I configure the CLI?",
+        "body": "How do I configure the CLI for a private test environment? I have read the setup guide but am unsure which variables are required.",
+        "state": "open",
+        "html_url": "https://github.com/example/demo/issues/20",
+        "labels": [
+          "question"
+        ],
+        "created_at": "2026-10-23T10:00:00Z",
+        "updated_at": "2026-10-23T10:00:00Z",
+        "comments": 0,
+        "author": "sample-user"
+      },
+      "category": "question",
+      "priority": "P3",
+      "confidence": "high",
+      "rationale": [
+        "Matched existing label: question",
+        "Question issues are assigned a provisional low priority."
+      ],
+      "suggested_labels": [
+        "type: question",
+        "priority: p3"
+      ],
+      "missing_information": [],
+      "duplicate_candidates": [],
+      "needs_attention": false,
+      "llm_summary": "",
+      "llm_follow_up": ""
+    }
+  ]
+}
