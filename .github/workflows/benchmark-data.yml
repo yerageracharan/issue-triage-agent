@@ -9,6 +9,7 @@ on:
       - "evaluation/benchmark/**"
       - ".github/workflows/benchmark-data.yml"
       - "tests/test_benchmark.py"
+      - "tests/test_baseline_evaluation.py"
       - "pyproject.toml"
   workflow_dispatch:
     inputs:
@@ -60,8 +61,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e ".[benchmark,test]"
 
-      - name: Test benchmark preparation logic
-        run: python -m pytest tests/test_benchmark.py
+      - name: Test benchmark preparation and baseline evaluation logic
+        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py
 
       - name: Download IssueDupesLite and prepare repository-level splits
         run: |
@@ -184,7 +185,14 @@ jobs:
               )
           PY
 
-      - name: Upload prepared benchmark artifact
+      - name: Run unchanged duplicate-detector baseline on held-out test split
+        run: |
+          python -m evaluation.benchmark.evaluate_baseline \\
+            --test-csv evaluation/benchmark/generated/test.csv \\
+            --manifest evaluation/benchmark/generated/manifest.json \\
+            --output-dir evaluation/benchmark/generated/baseline
+
+      - name: Upload prepared benchmark and baseline results
         uses: actions/upload-artifact@v4
         with:
           name: issuedupeslite-benchmark-${{ github.run_number }}
