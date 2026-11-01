@@ -11,6 +11,7 @@ import argparse
 import csv
 import json
 import math
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -123,6 +124,15 @@ def _body_excerpt(value: str, limit: int = 320) -> str:
     return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
 
 
+def _issue_url(repo: str, issue_number: str) -> str:
+    """Build a canonical GitHub issue URL from validated dataset identifiers."""
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
+        raise ValueError(f"Invalid repository identifier for issue URL: {repo!r}")
+    if not re.fullmatch(r"\d+", issue_number):
+        raise ValueError(f"Invalid issue number for issue URL: {issue_number!r}")
+    return f"https://github.com/{repo}/issues/{issue_number}"
+
+
 def analyze(
     validation_rows: list[dict[str, str]],
     score_rows: list[dict[str, str]],
@@ -216,9 +226,11 @@ def analyze(
             "pair_id": pair_id,
             "repo": source["repo"],
             "issue_1_number": source["issue_1_number"],
+            "issue_1_url": _issue_url(source["repo"], source["issue_1_number"]),
             "issue_1_title": source["issue_1_title"],
             "issue_1_body_excerpt": _body_excerpt(source["issue_1_body"]),
             "issue_2_number": source["issue_2_number"],
+            "issue_2_url": _issue_url(source["repo"], source["issue_2_number"]),
             "issue_2_title": source["issue_2_title"],
             "issue_2_body_excerpt": _body_excerpt(source["issue_2_body"]),
             "pair_label": source["pair_label"],
@@ -226,6 +238,7 @@ def analyze(
             "sample_type": source["sample_type"],
             "human_adjudication": "",
             "reviewer_notes": "",
+            "reviewer_confidence": "",
         }
         for method in METHODS:
             result[f"{method}_score"] = f"{_number(scores[f'{method}_score'], method):.8f}"
@@ -271,21 +284,80 @@ def write_outputs(output_dir: Path, summary: dict[str, Any], review_rows: list[d
     (output_dir / "error_analysis_summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
     )
+
     review_fields = list(review_rows[0]) if review_rows else [
         "review_reason", "triggered_by", "pair_id", "repo",
-        "issue_1_number", "issue_1_title", "issue_1_body_excerpt",
-        "issue_2_number", "issue_2_title", "issue_2_body_excerpt",
+        "issue_1_number", "issue_1_url", "issue_1_title", "issue_1_body_excerpt",
+        "issue_2_number", "issue_2_url", "issue_2_title", "issue_2_body_excerpt",
         "pair_label", "label_quality", "sample_type",
         "lexical_score", "lexical_threshold", "lexical_predicted_match",
         "bm25_score", "bm25_threshold", "bm25_predicted_match",
         "semantic_score", "semantic_threshold", "semantic_predicted_match",
         "hybrid_score", "hybrid_threshold", "hybrid_predicted_match",
-        "human_adjudication", "reviewer_notes",
+        "human_adjudication", "reviewer_notes", "reviewer_confidence",
     ]
     with (output_dir / "review_examples.csv").open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=review_fields)
         writer.writeheader()
         writer.writerows(review_rows)
+
+    # This is the file to give to reviewers. It intentionally omits source labels,
+    # model scores, threshold decisions, and the reason a row was selected.
+    blind_fields = [
+        "pair_id", "repo",
+        "issue_1_number", "issue_1_url", "issue_1_title", "issue_1_body_excerpt",
+        "issue_2_number", "issue_2_url", "issue_2_title", "issue_2_body_excerpt",
+        "human_adjudication", "reviewer_confidence", "reviewer_notes",
+    ]
+    blind_rows = [
+        {field: row.get(field, "") for field in blind_fields}
+        for row in review_rows
+    ]
+    with (output_dir / "reviewer_blind.csv").open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=blind_fields)
+        writer.writeheader()
+        writer.writerows(blind_rows)
+
+    guide = """# Human review guide
+
+## Use this file for independent review
+
+Open reviewer_blind.csv. It contains issue links, titles and shortened descriptions, but intentionally hides:
+- Whether the source dataset marked the pair as a duplicate.
+- Which model selected the pair.
+- Model similarity scores and thresholds.
+- Whether it was selected as a weak-negative alert or a source-positive low-score case.
+
+This reduces the chance that the dataset label or model scores influence the reviewer's judgement.
+
+## Review each pair
+
+1. Open both GitHub issue links. Read the complete descriptions and, where available, the discussion and linked pull requests.
+2. Decide whether the two reports describe the same underlying defect or request, not merely the same project, feature area, error family, or component.
+3. Record one value in human_adjudication:
+   - same_underlying_issue — substantially the same bug, failure, or feature request.
+   - related_but_distinct — connected topic or component, but a different underlying problem or request.
+   - different_issues — unrelated problems.
+   - insufficient_context — the available reports do not support a confident decision.
+4. Set reviewer_confidence to high, medium, or low.
+5. Explain the evidence in reviewer_notes. Mention shared reproduction steps, root cause, environment, stack trace, or requested behaviour where relevant.
+
+## Important judgement rules
+
+- Do not call two issues duplicates only because their titles or error messages are identical. Repeated templates and boilerplate can describe different failures.
+- Do not call two issues duplicates only because they mention the same subsystem or feature.
+- A follow-up, documentation request, workaround, or feature request can be related without being a duplicate.
+- A source-linked pair is not automatically correct; the original dataset relationship can be noisy.
+- An unlinked pair is not automatically distinct; it may be a duplicate that the source dataset failed to link.
+- Use insufficient_context rather than guessing from a short excerpt.
+
+## After review
+
+Keep the blind CSV unchanged as the original reviewer input. Store completed copies separately and preserve the original pair_id values so decisions can be merged back to review_examples.csv. For stronger evidence, have two reviewers independently label a subset and resolve disagreements before using these judgements in metrics.
+
+The review set comes from the validation split. Do not use these judgements to tune repeatedly on the held-out test split. The benchmark is based on source annotations and weak unlinked negatives, so even human review of 56 selected pairs does not establish production accuracy by itself.
+"""
+    (output_dir / "HUMAN_REVIEW_GUIDE.md").write_text(guide, encoding="utf-8")
 
     lines = [
         "# Phase 4 validation error analysis", "",
@@ -324,9 +396,9 @@ def write_outputs(output_dir: Path, summary: dict[str, Any], review_rows: list[d
     for pattern, count in summary["prediction_patterns"].items():
         lines.append(f"| {pattern} | {count} |")
     lines += ["", "## Human review pack", "",
-              "review_examples.csv contains high-scoring weak-negative alerts and low-scoring source-positive pairs. "
-              "It includes both issue titles, shortened descriptions, all four scores, thresholds, and blank fields "
-              "for human adjudication. Pairs selected by multiple methods appear once per review reason.", "",
+              f"review_examples.csv contains {len(review_rows)} examples plus all four model scores, source labels and threshold decisions for analysis.",
+              "reviewer_blind.csv contains the same issue pairs with canonical GitHub links, but hides source labels and model information so a reviewer can judge independently.",
+              "HUMAN_REVIEW_GUIDE.md defines the labels, confidence scale and review procedure.", "",
               "## Interpretation limits", ""]
     lines.extend(f"- {warning}" for warning in summary["warnings"])
     (output_dir / "error_analysis_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
