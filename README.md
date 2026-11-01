@@ -1091,16 +1091,38 @@ A passing test suite does not establish the real-world accuracy of the heuristic
 
 ## 27. Evaluation: what is and is not proven
 
-The current tests cover repository parsing, mocked GitHub fetching, pull-request exclusion, category rules, priority rules, missing-information checks, duplicate candidate scoring, report writing, CLI operation on a fixture, local-model response parsing, service payload generation, and MCP server import/configuration when the optional SDK is installed.
+The project now includes a reproducible IssueDupesLite benchmark workflow for duplicate-candidate ranking. It prepares source-linked positive pairs and weak/unverified unlinked pairs, separates repositories into training, validation and test groups, measures the unchanged production detector, and compares four similarity approaches on validation data.
 
-The sample dataset is small and synthetic. It is not a representative benchmark of every kind of GitHub issue. There is no independently labelled corpus in this project and there are no published precision, recall, F1, duplicate-detection precision, or calibration measurements. For that reason, this README does not claim that the system has a particular classification accuracy.
+### Phase 2: baseline
 
-To measure quality more seriously, a future evaluation should collect a permitted issue dataset, have maintainers independently label categories and priorities, define clear criteria for what counts as missing information, and manually label genuine duplicate pairs. The tool's outputs can then be compared with those labels. Results should be reported separately for each category and repository type because language and issue conventions differ.
+The original lexical detector was measured on 2,982 held-out test pairs from 150 repositories at its unchanged 0.48 threshold. It recorded 87.28% precision and 10.13% recall against the benchmark labels. In plain English, suggestions that crossed the threshold often matched the source label, but the detector missed many source-linked pairs. See [the baseline evaluation](docs/EVALUATION.md).
 
-For now, treat the project as an explainable first-pass helper and a practical MCP engineering example. You can inspect its rules, run it on a repository you understand, and decide whether its suggestions are useful in that context.
+### Phase 3: compare four methods
 
-More detail is in [`docs/EVALUATION.md`](docs/EVALUATION.md).
+On 2,984 validation pairs, the completed comparison recorded:
 
+| Method | ROC AUC | Average precision | F1 |
+|---|---:|---:|---:|
+| Existing lexical | 0.6541 | 0.6419 | 0.6804 |
+| BM25 | 0.7031 | 0.6780 | 0.7060 |
+| Semantic embeddings | 0.8120 | 0.7893 | 0.7637 |
+| Hybrid | 0.7918 | 0.7614 | 0.7539 |
+
+Semantic embeddings led on these three measures. The hybrid had a small advantage on top-three retrieval. This makes semantic embeddings a provisional candidate for further investigation, not an approved production replacement.
+
+### Phase 4: inspect failure cases
+
+A validation-only error-analysis tool now generates a summary report and a review CSV. The latest analysis selected 56 issue pairs for human review. It highlights high-scoring weak-negative examples, low-scoring source-positive examples and method disagreements.
+
+**These results are not definitive real-world accuracy measurements.** Source-positive pairs are recorded duplicate links, not independently re-labelled by our team. The unlinked negative pairs are weak and unverified; some may be genuine duplicates that the source dataset did not link. A model score is not proof that two issues share a root cause. Keep a human maintainer in the loop.
+
+The benchmark and detailed interpretation are documented in [evaluation/benchmark/README.md](evaluation/benchmark/README.md) and [docs/EVALUATION.md](docs/EVALUATION.md). The Phase 4 review command is:
+
+~~~powershell
+python -m evaluation.benchmark.analyze_similarity_errors --validation-csv evaluation/benchmark/generated/validation.csv --scores-csv evaluation/benchmark/generated/phase3/similarity_scores.csv --comparison-json evaluation/benchmark/generated/phase3/similarity_comparison.json --output-dir evaluation/benchmark/generated/phase4 --top-n 10
+~~~
+
+The selected method has not yet been integrated into production. The held-out test split must remain untouched until method selection and settings are frozen. The agent remains read-only and must never automatically close issues, apply labels, assign people or post comments.
 ---
 
 ## 28. Roadmap
@@ -1118,6 +1140,7 @@ The following items describe possible future work. They are not promises that th
 - [x] Structured MCP results and read-only tool annotations.
 - [x] Beginner guides for Claude Desktop, ChatGPT connection requirements, and local agents.
 - [x] Unit tests and Python-version CI.
+- [x] Offline benchmark comparison of lexical, BM25, semantic and hybrid similarity methods, plus a validation error-analysis review pack.
 - [ ] Repository-specific category and priority configuration.
 - [ ] Historical trend comparison between report snapshots.
 - [ ] Optional embeddings-based duplicate candidates using a local model.
