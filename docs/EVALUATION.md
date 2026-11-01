@@ -109,31 +109,106 @@ The test split must remain untouched for later final comparisons. Threshold tuni
 
 ## Phase 3: compare similarity methods (validation only)
 
-The Phase 3 experiment compares the existing lexical scorer, a repository-specific BM25 index, local semantic embeddings, and an equal-weight BM25/semantic hybrid. It uses the training split for score scaling and threshold selection, then reports the frozen settings on validation. The held-out test split is not used for Phase 3 tuning.
+The completed GitHub Actions run compared four methods on the same 2,984 validation pairs from 150 repositories. The 13,908 training pairs were used to select each method's threshold and to fit the hybrid scaling. Those settings were then frozen before validation was evaluated. The held-out test split was not used for Phase 3 selection.
 
-Run the comparison after preparing the benchmark:
+The embedding model was sentence-transformers/all-MiniLM-L6-v2, run locally on CPU. No paid API key or hosted LLM call was used.
+
+### Full validation comparison
+
+| Method | ROC AUC | Average precision | F1 at training-selected threshold | MRR@3 | Recall@3 |
+|---|---:|---:|---:|---:|---:|
+| Existing lexical | 0.6541 | 0.6419 | 0.6804 | 0.8102 | 0.9933 |
+| BM25 | 0.7031 | 0.6780 | 0.7060 | 0.8712 | 0.9967 |
+| Semantic embeddings | 0.8120 | 0.7893 | 0.7637 | 0.9158 | 0.9967 |
+| Hybrid | 0.7918 | 0.7614 | 0.7539 | 0.9178 | 1.0000 |
+
+Semantic embeddings led on ROC AUC, average precision and F1. The hybrid had a very small advantage on MRR@3 and Recall@3. This makes semantic embeddings the strongest provisional candidate on the overall pair-ranking/classification measures, but it does not yet justify a production change.
+
+### Thresholds selected using training data
+
+| Method | Training-selected threshold |
+|---|---:|
+| Existing lexical | 0.093209 |
+| BM25 | 5.445388 |
+| Semantic embeddings | 0.426541 |
+| Hybrid | 0.412911 |
+
+The thresholds are not directly comparable because each method has a different score scale. All four were selected using training labels, then applied unchanged to validation.
+
+The top-three retrieval metrics use 598 eligible incoming-issue groups. A group is eligible only when it has at least two sampled candidates and at least one source-positive candidate; single-candidate groups are excluded.
+
+### What these results mean
+
+ROC AUC measures how well a method orders a randomly selected source-positive pair above a weak-negative pair. Average precision summarises how highly the source-positive pairs appear when all pairs are ranked. F1 combines precision and recall after applying a threshold. MRR@3 rewards finding the first source-positive candidate near the top of a short list; Recall@3 measures how many source-positive candidates appear in the first three positions.
+
+These are benchmark-label comparisons, not independently verified real-world accuracy measurements. Source-positive pairs are recorded duplicate links; weak negatives are unlinked pairs that may contain undiscovered duplicates. A method can therefore be penalised for flagging an unlinked pair that is actually a genuine duplicate.
+
+### Reproducing the comparison
+
+After preparing the benchmark, install the optional dependencies and run:
 
 ~~~powershell
 python -m pip install -e '.[benchmark,test,similarity-experiments]'
 python -m evaluation.benchmark.evaluate_similarity_methods --train-csv evaluation/benchmark/generated/train.csv --validation-csv evaluation/benchmark/generated/validation.csv --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase3
 ~~~
 
-The optional dependency group keeps the standard Issue Triage Agent installation lightweight. The embedding model runs locally; no paid API key is required.
+The comparison writes `similarity_comparison.json`, `similarity_scores.csv`, and `similarity_comparison_report.md`.
 
-### Early local comparison: lexical versus BM25
+## Phase 4: validation error analysis and human review
 
-On 13,908 training pairs and 2,984 validation pairs, a local run comparing the existing lexical scorer and BM25 produced:
+Phase 4 inspects where the four methods disagree and which validation examples deserve a person’s attention. It uses the saved Phase 3 scores and the validation rows. It does not re-train the model, change thresholds, read the held-out test split, or modify the production detector.
 
-| Validation metric | Lexical | BM25 |
+### Results at the training-selected thresholds
+
+| Method | TP source labels | Weak-negative alerts | Weak negatives not flagged | Source-positive low scores | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Existing lexical | 1,390 | 1,204 | 288 | 102 | 0.5359 | 0.9316 | 0.6804 |
+| BM25 | 1,315 | 918 | 574 | 177 | 0.5889 | 0.8814 | 0.7060 |
+| Semantic embeddings | 1,296 | 606 | 886 | 196 | 0.6814 | 0.8686 | 0.7637 |
+| Hybrid | 1,320 | 690 | 802 | 172 | 0.6567 | 0.8847 | 0.7539 |
+
+The labels in this table are intentionally described as “weak-negative alerts” and “source-positive low scores.” They correspond to the false-positive and false-negative cells in a conventional confusion matrix, but the underlying negative labels have not been confirmed by human reviewers.
+
+### How the weak-negative results differ
+
+| Method | Hard lexical negatives flagged | Random same-repository negatives flagged |
 |---|---:|---:|
-| ROC AUC | 0.6541 | 0.7031 |
-| Average precision | 0.6419 | 0.6780 |
-| F1 at training-selected threshold | 0.6804 | 0.7060 |
-| MRR@3 | 0.8102 | 0.8712 |
-| Recall@3 | 0.9933 | 0.9967 |
+| Existing lexical | 736 / 742 (99.19%) | 468 / 750 (62.40%) |
+| BM25 | 567 / 742 (76.42%) | 351 / 750 (46.80%) |
+| Semantic embeddings | 442 / 742 (59.57%) | 164 / 750 (21.87%) |
+| Hybrid | 497 / 742 (66.98%) | 193 / 750 (25.73%) |
 
-For top-three retrieval, 598 qualifying incoming-issue query groups were evaluated; groups with fewer than two sampled candidates or no source-positive candidate were excluded. BM25 performed better than the lexical scorer on these validation measures. This is an early comparison, not a final test-set result or proof of real-world accuracy.
+The semantic method raised fewer alerts on both sampled weak-negative groups at its training-selected threshold. That may mean fewer distracting candidate suggestions, but it is not proof that every alert it avoids is wrong: some weak negatives may actually be duplicates that were never linked in the source dataset.
 
-The semantic embedding and hybrid methods are implemented but their full CPU run is still pending in GitHub Actions run [41356083341](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41356083341). Do not treat them as evaluated until the workflow saves the comparison artifact. The final test split remains untouched.
+### Human-review pack
 
-As in Phases 1 and 2, positive labels are source-annotated and negative labels are weak/unverified unlinked candidates. Some negatives may be undiscovered duplicates. Validation metrics measure agreement with these dataset labels, not independently confirmed truth.
+The analysis selected the top 10 highest-scoring weak-negative pairs and bottom 10 source-positive low-score pairs for each method. Duplicate examples selected by multiple methods were included once per review reason, producing **56 unique review rows**.
+
+Each row in `review_examples.csv` includes issue titles, shortened body excerpts, source label quality, sample type, all four scores and thresholds, the methods that selected the example, and empty `human_adjudication` and `reviewer_notes` fields. The CSV is a review queue, not an automatically adjudicated answer key.
+
+### Reproduce Phase 4
+
+Run the following after Phase 3 has produced its files:
+
+~~~powershell
+python -m evaluation.benchmark.analyze_similarity_errors --validation-csv evaluation/benchmark/generated/validation.csv --scores-csv evaluation/benchmark/generated/phase3/similarity_scores.csv --comparison-json evaluation/benchmark/generated/phase3/similarity_comparison.json --output-dir evaluation/benchmark/generated/phase4 --top-n 10
+~~~
+
+The command writes:
+- `error_analysis_summary.json` — machine-readable metrics and prediction disagreement counts.
+- `error_analysis_report.md` — a readable summary of the findings and limitations.
+- `review_examples.csv` — selected issue pairs for human adjudication.
+
+The Phase 4 analyser uses only the Python standard library. It validates that validation and score files contain the same pair IDs, labels and repositories before producing results. Its tests cover metric calculation, review selection, file generation and mismatched input rejection.
+
+### What happens next
+
+The next step is to review and adjudicate a representative sample of the 56 examples. In particular, inspect high-scoring weak-negative alerts to identify missing source links, and source-positive low-score pairs to understand why the methods struggled. Keep these human labels separate from the original source labels.
+
+After the review, choose and freeze a method and its settings. Then run one controlled comparison on the held-out test split. Only after that should we consider integrating the selected approach into production duplicate-candidate detection. The agent must remain read-only: it can recommend candidates, but it must not close issues, add labels, assign people or post comments.
+
+### Reproducible run and artifact
+
+The successful full comparison workflow is [GitHub Actions run 41356083341](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41356083341). Its artifact is `issuedupeslite-benchmark-14` (artifact ID `13103676220`). It includes the prepared data, Phase 2 baseline, Phase 3 four-method comparison and Phase 4 review pack. The artifact is temporary and has a 30-day retention period.
+
+The governing limitations remain: source positives are not independently re-labelled; unlinked negatives are weak and unverified; validation is used for method investigation rather than final performance claims; and similarity is evidence for human inspection, not proof of a shared root cause.
