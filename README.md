@@ -12,6 +12,17 @@
   <img alt="Read only" src="https://img.shields.io/badge/GitHub%20access-read--only-26845b">
 </p>
 
+<p align="center">
+  <img src="docs/assets/triage-kun-manga.svg" alt="Four-panel manga: the backlog yokai appears, Triage-kun sorts issues, duplicate ghosts are spotted, and the human maintainer makes the final call." width="900">
+</p>
+
+<p align="center">
+  <strong>ざわ… ざわ… THE BACKLOG YOKAI APPROACHES.</strong><br>
+  <code>(•̀ᴗ•́)و ̑̑  Triage first. Panic later.</code>
+  &nbsp; <code>similarity ≠ duplicate</code>
+  &nbsp; <code>human review = final boss</code>
+</p>
+
 Issue Triage Agent reads a GitHub repository's issues and prepares a first-pass triage analysis. It suggests whether each report looks like a bug, feature request, documentation problem, question, or something else. It also suggests a provisional priority, points out details that may be missing, and lists other issues that look similar.
 
 You can use it in three ways:

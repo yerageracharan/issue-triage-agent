@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="330" viewBox="0 0 1120 330" role="img" aria-labelledby="title desc">
+<title id="title">Issue Triage Agent: the backlog yokai manga</title>
+<desc id="desc">A four-panel manga strip with a red accent. A backlog monster appears, Triage-kun sorts issues, duplicate ghosts are spotted, and a human maintainer makes the final decision.</desc>
+<defs>
+  <pattern id="tone" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1" fill="#111"/></pattern>
+  <pattern id="fineTone" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".55" fill="#111"/></pattern>
+  <style>
+    .ink{stroke:#111;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    .thin{stroke:#111;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .jp{font-family:'Noto Sans JP','Yu Gothic',Meiryo,sans-serif;font-weight:900;fill:#111}
+    .label{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;font-weight:800;letter-spacing:1px;fill:#111}
+    .red{fill:#d62828}
+  </style>
+</defs>
+<rect x="5" y="5" width="1110" height="320" rx="8" fill="#f7f4ee" stroke="#111" stroke-width="5"/>
+<path d="M10 18 L1110 18" stroke="#d62828" stroke-width="5"/>
+<!-- 01: the backlog yokai -->
+<g transform="translate(15 27)">
+  <rect width="267" height="282" fill="#fff" class="ink"/>
+  <path d="M0 198 Q90 160 267 195 L267 282 L0 282Z" fill="url(#tone)" opacity=".3"/>
+  <text x="13" y="24" class="label">01 / THE BACKLOG</text>
+  <path d="M28 78 L84 63 L122 89 L114 174 L34 184Z" fill="#fff" class="thin"/>
+  <path d="M44 61 L101 50 L139 75 L130 164 L49 174Z" fill="#fff" class="thin"/>
+  <path d="M64 43 L122 31 L159 55 L152 150 L70 160Z" fill="#fff" class="thin"/>
+  <path d="M76 80 L130 69 M74 94 L125 84 M73 108 L116 99" class="thin" fill="none"/>
+  <path d="M153 110 L186 77 L215 93 L229 128 L216 166 L185 176 L158 154Z" fill="#111" class="ink"/>
+  <ellipse cx="184" cy="124" rx="8" ry="12" fill="#fff"/><ellipse cx="208" cy="121" rx="8" ry="12" fill="#fff"/>
+  <path d="M190 150 Q198 158 207 148" fill="none" stroke="#fff" stroke-width="3"/>
+  <path d="M158 90 L145 69 M218 89 L235 70 M173 174 L159 194 M216 171 L233 191" class="ink" fill="none"/>
+  <path d="M147 53 L136 34 M232 57 L246 37 M130 116 L112 113" class="thin" fill="none"/>
+  <text x="151" y="54" class="jp red" font-size="19">ドサッ!!</text>
+  <rect x="15" y="215" width="237" height="48" fill="#111" transform="rotate(-2 15 215)"/>
+  <text x="27" y="237" fill="#fff" class="label">100 OPEN ISSUES?!</text>
+  <text x="27" y="253" fill="#fff" class="label" font-size="10">THE YOKAI HAS AWAKENED</text>
+</g>
+<!-- 02: Triage-kun -->
+<g transform="translate(292 27)">
+  <rect width="267" height="282" fill="#fff" class="ink"/>
+  <rect width="267" height="282" fill="url(#fineTone)" opacity=".13"/>
+  <text x="13" y="24" class="label">02 / TRIAGE-KUN</text>
+  <path d="M31 65 Q40 24 76 47 L95 78 L111 47 Q145 24 158 67 L153 133 Q146 177 94 178 Q40 177 33 133Z" fill="#fff" class="ink"/>
+  <path d="M48 58 Q52 38 71 57 L78 78 L58 82Z M119 78 L130 56 Q151 40 151 64 L139 85Z" fill="#111"/>
+  <path d="M59 108 Q72 98 83 108 M112 108 Q125 98 137 108" fill="none" class="thin"/>
+  <path d="M83 128 Q98 140 113 128" fill="none" class="thin"/>
+  <circle cx="45" cy="121" r="10" fill="#d62828" opacity=".8"/><circle cx="150" cy="121" r="10" fill="#d62828" opacity=".8"/>
+  <path d="M61 156 L53 184 L134 184 L128 156" fill="#d62828" class="thin"/>
+  <rect x="70" y="180" width="54" height="48" rx="4" fill="#fff" class="ink"/>
+  <path d="M80 193 L112 193 M80 203 L107 203 M80 213 L111 213" class="thin" fill="none"/>
+  <path d="M37 190 L17 209 M148 189 L166 204" class="ink" fill="none"/>
+  <path d="M180 65 Q229 31 248 68 L240 107 Q224 119 185 101Z" fill="#fff" class="thin"/>
+  <text x="193" y="78" class="label" font-size="10">CALM...</text><text x="190" y="92" class="label" font-size="10">SORT...</text>
+  <text x="13" y="254" class="jp" font-size="18">仕分け開始!</text>
+  <text x="135" y="254" class="label" font-size="10">SORT MODE ON</text>
+</g>
+<!-- 03: duplicate ghosts -->
+<g transform="translate(569 27)">
+  <rect width="267" height="282" fill="#fff" class="ink"/>
+  <text x="13" y="24" class="label">03 / DUPLICATE GHOSTS</text>
+  <path d="M32 132 Q23 76 56 57 Q94 35 126 61 Q146 81 138 132 L138 172 L32 172Z" fill="#fff" class="ink"/>
+  <path d="M154 132 Q145 76 178 57 Q216 35 248 61 Q260 79 252 132 L252 172 L154 172Z" fill="#fff" class="ink"/>
+  <path d="M57 104 L70 94 L83 104 M101 104 L114 94 L126 104 M179 104 L192 94 L205 104 M223 104 L236 94 L248 104" fill="none" class="thin"/>
+  <ellipse cx="90" cy="127" rx="6" ry="8" fill="#111"/><ellipse cx="111" cy="127" rx="6" ry="8" fill="#111"/>
+  <ellipse cx="212" cy="127" rx="6" ry="8" fill="#111"/><ellipse cx="233" cy="127" rx="6" ry="8" fill="#111"/>
+  <path d="M12 190 L256 190" stroke="#111" stroke-width="2" stroke-dasharray="4 5"/>
+  <rect x="14" y="204" width="112" height="49" rx="4" fill="#fff" class="thin"/>
+  <rect x="140" y="204" width="112" height="49" rx="4" fill="#fff" class="thin"/>
+  <text x="24" y="222" class="label" font-size="9">#014 EXPORT</text><text x="24" y="239" class="label" font-size="9">CRASHES</text>
+  <text x="150" y="222" class="label" font-size="9">#027 CSV</text><text x="150" y="239" class="label" font-size="9">EXPORT FAILS</text>
+  <path d="M126 228 L140 228" stroke="#d62828" stroke-width="4"/>
+  <text x="96" y="58" class="jp red" font-size="23">双子?!</text>
+  <text x="14" y="272" class="label" font-size="10">MAYBE TWINS. CHECK THE EVIDENCE.</text>
+</g>
+<!-- 04: human makes the call -->
+<g transform="translate(846 27)">
+  <rect width="259" height="282" fill="#fff" class="ink"/>
+  <text x="13" y="24" class="label">04 / HUMAN REVIEW</text>
+  <path d="M67 103 Q59 48 101 42 Q147 37 160 80 L155 143 L70 143Z" fill="#111"/>
+  <path d="M75 99 Q80 55 111 55 Q145 55 149 100 L141 145 L82 145Z" fill="#fff" class="thin"/>
+  <path d="M87 100 L101 96 M123 96 L138 100 M104 119 Q113 126 123 118" class="thin" fill="none"/>
+  <path d="M61 160 Q112 132 167 160 L180 209 L51 209Z" fill="#d62828" class="ink"/>
+  <path d="M75 164 L112 186 L147 163" fill="none" stroke="#fff" stroke-width="3"/>
+  <path d="M180 91 Q211 47 244 79 L246 126 Q211 147 183 119Z" fill="#fff" class="thin"/>
+  <text x="194" y="83" class="label" font-size="9">HMM...</text><text x="193" y="99" class="label" font-size="9">VERIFY!</text>
+  <circle cx="206" cy="185" r="36" fill="#fff" stroke="#d62828" stroke-width="6"/>
+  <path d="M184 185 L199 199 L229 166" fill="none" stroke="#d62828" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="14" y="249" class="jp" font-size="19">人間が決める。</text>
+  <text x="14" y="271" class="label" font-size="10">HUMAN MAKES THE CALL.</text>
+  <path d="M26 43 L15 34 M38 48 L35 32 M48 59 L61 48" class="thin" fill="none"/>
+</g>
+<text x="1090" y="318" text-anchor="end" font-family="ui-monospace,monospace" font-size="9" fill="#555">TRIAGE-KUN // ISSUE YOKAI FILE 001</text>
+</svg>
