@@ -232,13 +232,15 @@ It writes three outputs:
 |---|---|
 | `error_analysis_summary.json` | Metrics, thresholds and disagreement counts in machine-readable form. |
 | `error_analysis_report.md` | A human-readable summary of the validation analysis. |
-| `review_examples.csv` | Selected issue pairs, titles, shortened descriptions, model scores, thresholds and blank reviewer fields. |
+| `review_examples.csv` | Diagnostic pairs with source labels and all model scores. Keep this away from reviewers during blind adjudication. |
+| `reviewer_blind.csv` | Reviewer-facing pairs with canonical issue links and no source labels or model scores. |
+| `HUMAN_REVIEW_GUIDE.md` | Decision rubric, confidence scale and blind-review procedure. |
 
 On the completed validation run, the analyser inspected 2,984 pairs across 150 repositories and produced 56 deduplicated review rows. The semantic method flagged 442 of 742 hard-lexical weak negatives and 164 of 750 randomly sampled same-repository weak negatives. The corresponding alert counts were 736 and 468 for lexical, 567 and 351 for BM25, and 497 and 193 for the hybrid.
 
 These are weak-negative alert counts, not verified false positives. The source dataset does not prove that every unlinked pair is unrelated. Likewise, a source-positive pair with a low score is a review candidate, not proof that the live agent would miss a genuine duplicate.
 
-The report records per-method thresholded counts as well as five-character disagreement patterns (lexical, BM25, semantic, hybrid). The CSV contains a blank `human_adjudication` field so a reviewer can record an independent judgement. Do not replace or overwrite the original source label.
+The report records per-method thresholded counts as well as five-character disagreement patterns (lexical, BM25, semantic, hybrid). The blind CSV contains blank `human_adjudication`, `reviewer_confidence`, and `reviewer_notes` fields. It intentionally hides model scores, selected method, sample type and source label. Do not replace or overwrite the original source label.
 
 The analysis tool uses only the Python standard library. It validates the correspondence of pair IDs, labels and repository names between validation and score files. The focused tests are run with:
 
@@ -248,9 +250,7 @@ python -m pytest tests/test_error_analysis.py
 
 ### What to do with the review pack
 
-Open `review_examples.csv` in a spreadsheet application. Inspect both issue reports, not just the titles. Record a judgement such as `same_underlying_issue`, `different_issues`, or `uncertain` in the human-adjudication column, and explain the evidence in reviewer notes. If you cannot confidently decide from the report text, use `uncertain` rather than guessing.
-
-Keep a copy of the original file. Human annotations should be stored separately from the original benchmark labels, with reviewer identity, review date and adjudication rules documented before using them in future metrics.
+Give reviewers `reviewer_blind.csv`, not the diagnostic `review_examples.csv`. Open both original GitHub issues, read their full descriptions and discussion, and apply the four-way rubric in [docs/HUMAN_REVIEW_GUIDE.md](../../docs/HUMAN_REVIEW_GUIDE.md): `same_underlying_issue`, `related_but_distinct`, `different_issues`, or `insufficient_context`. Record confidence and evidence notes. Keep the original blind CSV unchanged and save completed copies separately. Ideally, have two reviewers independently label a subset and resolve disagreements.
 
 ## Phase 5: choose, freeze and test
 
