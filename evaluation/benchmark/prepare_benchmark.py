@@ -636,7 +636,7 @@ def load_huggingface_dataset(
             "python -m pip install -e '.[benchmark]'"
         ) from exc
 
-    info = HfApi().dataset_info(repo_id=dataset_id, repo_type="dataset", revision=revision)
+    info = HfApi().dataset_info(repo_id=dataset_id, revision=revision)
     resolved_revision = str(info.sha)
     kwargs: dict[str, Any] = {
         "path": dataset_id,
