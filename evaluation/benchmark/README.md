@@ -130,3 +130,50 @@ The workflow runs the benchmark preparation unit tests first. After downloading 
 The artifact is retained for 30 days. It is deliberately not committed to the Git repository: these files contain third-party GitHub issue text derived from IssueDupesLite, whose declared licence is CC-BY-SA-4.0. Keep the generated ATTRIBUTION.md alongside the files when you use or redistribute the derived benchmark.
 
 You can also download the original dataset yourself from [Hugging Face — IssueDupesLite](https://huggingface.co/datasets/primordic/IssueDupesLite). The GitHub Actions route is easier because it performs the same preparation and validation automatically.
+
+
+## Phase 2: measure the unchanged detector
+
+Phase 2 establishes a baseline before any similarity algorithm is improved. The evaluator calls the exact functions used by the agent:
+
+- `issue_triage_agent.analyzer.analyse_issue` to infer each issue's category using the current rules.
+- `issue_triage_agent.similarity.similarity_score` to calculate the current similarity score.
+- The existing default threshold of `0.48` from `attach_duplicate_candidates` to decide whether a pair would be suggested.
+
+Run it after preparing the data:
+
+~~~powershell
+python -m evaluation.benchmark.evaluate_baseline --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --output-dir evaluation/benchmark/generated/baseline
+~~~
+
+It writes three files:
+
+| File | What it contains |
+|---|---|
+| baseline_metrics.json | Metric values, confusion counts, dataset revision, and caveats. |
+| baseline_scores.csv | One row per pair with the score, label, predicted decision, and inferred categories. |
+| baseline_report.md | A readable summary of the results. |
+
+The evaluator does not train a model, call an LLM, contact GitHub, or change the live detector. It only scores prepared pairs.
+
+### First recorded baseline (IssueDupesLite revision `902b5805afa93e8cb018bd3c860c0f3eba55029e`)
+
+The held-out test split contained 2,982 pairs from 150 repositories: 1,491 source-annotated positives and 1,491 weak/unverified negatives. At the existing 0.48 threshold:
+
+| Measure | Result |
+|---|---:|
+| Accuracy | 54.33% |
+| Precision | 87.28% |
+| Recall | 10.13% |
+| F1 | 18.15% |
+| Specificity | 98.52% |
+| ROC AUC | 64.10% |
+| Average precision | 65.66% |
+
+The detector flagged 151 of 1,491 source-labelled positive pairs and 22 of 1,491 weak negatives. It did not flag 1,469 weak negatives and missed 1,340 source-labelled positives.
+
+In everyday language: when the current detector suggests a pair, that suggestion often matches the source label. But at the current cutoff it misses most of the source-labelled duplicates. This suggests a conservative detector with poor recall on this dataset.
+
+**These are not definitive real-world accuracy numbers.** The source positives are not independently re-labelled by this project, and negatives are merely pairs that were not linked in the source sample. Some may be undiscovered duplicates. The test is also pairwise: it does not measure the quality of the live top-three candidate list in a repository scan.
+
+Do not tune the algorithm or its threshold against this test split. Use the validation split for experiments. Keep the test split for a later, controlled comparison.
