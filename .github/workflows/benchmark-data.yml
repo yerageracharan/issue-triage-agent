@@ -11,6 +11,7 @@ on:
       - "tests/test_benchmark.py"
       - "tests/test_baseline_evaluation.py"
       - "tests/test_similarity_experiments.py"
+      - "tests/test_error_analysis.py"
       - "pyproject.toml"
   workflow_dispatch:
     inputs:
@@ -66,7 +67,7 @@ jobs:
           python -m pip install -e ".[benchmark,test,similarity-experiments]"
 
       - name: Test benchmark preparation and baseline evaluation logic
-        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py tests/test_similarity_experiments.py
+        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py tests/test_similarity_experiments.py tests/test_error_analysis.py
 
       - name: Download IssueDupesLite and prepare repository-level splits
         run: |
@@ -195,7 +196,10 @@ jobs:
       - name: Compare lexical, BM25, semantic, and hybrid methods on validation split
         run: python -m evaluation.benchmark.evaluate_similarity_methods --train-csv evaluation/benchmark/generated/train.csv --validation-csv evaluation/benchmark/generated/validation.csv --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase3
 
-      - name: Upload benchmark, baseline, and Phase 3 comparison
+      - name: Run Phase 4 validation error analysis and prepare human review pack
+        run: python -m evaluation.benchmark.analyze_similarity_errors --validation-csv evaluation/benchmark/generated/validation.csv --scores-csv evaluation/benchmark/generated/phase3/similarity_scores.csv --comparison-json evaluation/benchmark/generated/phase3/similarity_comparison.json --output-dir evaluation/benchmark/generated/phase4 --top-n 10
+
+      - name: Upload benchmark, baseline, Phase 3 comparison, and Phase 4 review pack
         uses: actions/upload-artifact@v4
         with:
           name: issuedupeslite-benchmark-${{ github.run_number }}
