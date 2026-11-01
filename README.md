@@ -1254,3 +1254,16 @@ Triage-kun has a few more reactions for the backlog battlefield. These are just 
 </p>
 
 <sub>TRIAGE-KUN FIELD NOTE 002 · 「あわてないで、まず確認。」 — Don't panic; check the evidence first.</sub>
+
+
+### Download it with GitHub Actions
+
+You can prepare the benchmark on GitHub's runner instead of downloading the dataset to your own computer:
+
+1. Open the repository's **Actions** tab.
+2. Select **Prepare duplicate-detection benchmark**.
+3. Click **Run workflow** and keep the default settings for the first run.
+4. Open the completed workflow run.
+5. Download the artifact named issuedupeslite-benchmark from the Artifacts section.
+
+The generated benchmark is stored as a temporary GitHub Actions artifact for 30 days. It is not committed to the repository's Git history. This keeps third-party issue text out of the source repository while still letting you download the prepared CSV files. See the workflow file at .github/workflows/benchmark-data.yml and the full benchmark instructions at evaluation/benchmark/README.md.
