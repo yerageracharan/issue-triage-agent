@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import csv
+
 from evaluation.benchmark.analyze_similarity_errors import analyze, write_outputs
 
 
@@ -47,6 +49,8 @@ def test_analysis_counts_confusion_and_creates_review_candidates():
     assert summary["methods"]["lexical"]["weak_negative_breakdown"]["hard_lexical"]["alert_rate"] == 1.0
     assert {row["pair_id"] for row in review} == {"p2", "p3"}
     assert all(row["human_adjudication"] == "" for row in review)
+    assert review[0]["issue_1_url"] == "https://github.com/org/repo/issues/1"
+    assert review[0]["issue_2_url"] == "https://github.com/org/repo/issues/2"
 
 
 def test_analysis_rejects_mismatched_pair_ids():
@@ -70,3 +74,11 @@ def test_write_outputs_creates_report_json_and_csv(tmp_path):
     assert (tmp_path / "error_analysis_summary.json").is_file()
     assert (tmp_path / "error_analysis_report.md").is_file()
     assert (tmp_path / "review_examples.csv").is_file()
+    assert (tmp_path / "reviewer_blind.csv").is_file()
+    assert (tmp_path / "HUMAN_REVIEW_GUIDE.md").is_file()
+    with (tmp_path / "reviewer_blind.csv").open(encoding="utf-8-sig", newline="") as handle:
+        blind = list(csv.DictReader(handle))
+    assert blind[0]["issue_1_url"] == "https://github.com/org/repo/issues/1"
+    assert "pair_label" not in blind[0]
+    assert "semantic_score" not in blind[0]
+    assert "review_reason" not in blind[0]
