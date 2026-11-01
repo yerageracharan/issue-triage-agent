@@ -12,3 +12,7 @@ build/
 dist/
 *.egg-info/
 .DS_Store
+
+# Downloaded/derived benchmark data contains third-party issue text.
+evaluation/benchmark/generated/
+evaluation/benchmark/.cache/

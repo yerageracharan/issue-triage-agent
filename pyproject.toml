@@ -32,11 +32,12 @@ issue-triage-mcp = "issue_triage_agent.mcp_server:main"
 test = ["pytest>=8.0"]
 mcp = ["mcp[cli]>=2.0,<3"]
 openai-agent = ["openai-agents>=0.6.0", "mcp>=2.0,<3"]
+benchmark = ["datasets>=3.0.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 testpaths = ["tests"]
 addopts = "-q"

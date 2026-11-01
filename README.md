@@ -1206,6 +1206,26 @@ This project is released under the MIT License. See [`LICENSE`](LICENSE).
 
 ---
 
+## Duplicate-detection benchmark: Phase 1
+
+Before changing the duplicate detector, the project now has a reproducible benchmark preparation workflow based on [Primordic/IssueDupesLite](https://huggingface.co/datasets/primordic/IssueDupesLite).
+
+The preparation script extracts source-labelled duplicate pairs, samples same-repository weak negatives, keeps repositories grouped across train/validation/test, and handles the source dataset's primary/duplicate date caveat.
+
+**Start here:** [evaluation/benchmark/README.md](evaluation/benchmark/README.md).
+
+~~~powershell
+python -m pip install -e '.[benchmark,test]'
+python -m evaluation.benchmark.prepare_benchmark --seed 42
+~~~
+
+Generated data is kept locally in evaluation/benchmark/generated/ and is not committed by default because it contains third-party GitHub issue text under the source dataset's CC-BY-SA-4.0 licence. Negative examples are explicitly marked as weak/unverified; the source warns that some genuine duplicates may be unlabelled.
+
+This phase does not change the existing duplicate-detection algorithm. It establishes the benchmark first.
+
+
+---
+
 ## Bonus manga intermission
 
 Triage-kun has a few more reactions for the backlog battlefield. These are just for fun; the analysis rules and workflow above remain the source of truth.
