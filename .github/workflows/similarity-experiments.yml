@@ -1,23 +1,12 @@
-name: Compare duplicate-detection methods
-
-run-name: Phase 3 similarity experiments
+name: Phase 3 similarity experiments
 
 on:
   push:
     branches: [main]
-    paths:
-      - "evaluation/benchmark/evaluate_similarity_methods.py"
-      - "tests/test_similarity_experiments.py"
-      - "pyproject.toml"
-      - ".github/workflows/similarity-experiments.yml"
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 permissions:
   contents: read
-
-concurrency:
-  group: similarity-experiments-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
   compare-methods:
@@ -28,7 +17,6 @@ jobs:
       HF_HOME: ${{ runner.temp }}/hf-cache
       TOKENIZERS_PARALLELISM: "false"
       TRANSFORMERS_NO_ADVISORY_WARNINGS: "1"
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
