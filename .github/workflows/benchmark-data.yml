@@ -186,13 +186,9 @@ jobs:
           PY
 
       - name: Run unchanged duplicate-detector baseline on held-out test split
-        run: |
-          python -m evaluation.benchmark.evaluate_baseline \\
-            --test-csv evaluation/benchmark/generated/test.csv \\
-            --manifest evaluation/benchmark/generated/manifest.json \\
-            --output-dir evaluation/benchmark/generated/baseline
+        run: python -m evaluation.benchmark.evaluate_baseline --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --output-dir evaluation/benchmark/generated/baseline
 
-      - name: Upload prepared benchmark and baseline results
+      - name: Upload prepared benchmark and baseline results and baseline results
         uses: actions/upload-artifact@v4
         with:
           name: issuedupeslite-benchmark-${{ github.run_number }}
