@@ -72,3 +72,36 @@ This is a data-preparation milestone only. No duplicate-detection algorithm has 
 The workflow at .github/workflows/benchmark-data.yml downloads IssueDupesLite on a GitHub-hosted runner, runs the benchmark preparation unit tests, generates the dataset, validates repository isolation and pair uniqueness, and uploads the generated benchmark directory as an Actions artifact with a 30-day retention period.
 
 The artifact is not committed to the source repository. This is intentional because it contains third-party issue text from the CC-BY-SA-4.0 source dataset. Keep ATTRIBUTION.md with any derived benchmark data you download.
+
+
+## Phase 2: current duplicate detector baseline
+
+A reproducible evaluator now measures the existing duplicate scorer without changing it. It reuses `analyse_issue` to obtain the categories that the production scorer expects, then calls the production `similarity_score` function for each prepared issue pair. The current `0.48` candidate threshold is retained.
+
+Run the evaluator after preparing the benchmark:
+
+~~~powershell
+python -m evaluation.benchmark.evaluate_baseline --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --output-dir evaluation/benchmark/generated/baseline
+~~~
+
+Outputs are `baseline_metrics.json`, `baseline_scores.csv`, and `baseline_report.md`. The Actions workflow runs this evaluator on the held-out test split and includes the files in the generated benchmark artifact.
+
+### Initial result
+
+Using IssueDupesLite revision `902b5805afa93e8cb018bd3c860c0f3eba55029e`, the test split contained 2,982 pairs from 150 repositories, balanced between 1,491 source-annotated duplicate pairs and 1,491 weak/unverified negatives. At threshold 0.48, the unchanged detector produced:
+
+- Accuracy: 54.33%
+- Precision: 87.28%
+- Recall: 10.13%
+- F1: 18.15%
+- Specificity: 98.52%
+- ROC AUC: 64.10%
+- Average precision: 65.66%
+
+The confusion counts were 151 true-positive labels flagged, 22 weak-negative labels flagged, 1,469 weak-negative labels not flagged, and 1,340 source-positive labels missed.
+
+Interpretation: among the pairs flagged by the current threshold, 87.28% carried a positive source label. However, only 10.13% of source-labelled positives crossed the threshold. This is a high-precision / low-recall operating point on this particular pair benchmark.
+
+The negative labels are unverified and may contain undiscovered duplicates. Therefore, a pair counted as a false positive may be a missed source annotation rather than a genuine detector mistake. The numbers measure agreement with the dataset labels, not proven real-world accuracy. The score is pairwise and does not establish top-three retrieval quality in a live repository scan.
+
+The test split must remain untouched for later final comparisons. Threshold tuning and algorithm experiments should use the validation split. No detector logic was changed in this baseline step.
