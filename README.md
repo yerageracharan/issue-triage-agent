@@ -1112,7 +1112,7 @@ Semantic embeddings led on these three measures. The hybrid had a small advantag
 
 ### Phase 4: inspect failure cases
 
-A validation-only error-analysis tool now generates a summary report and a review CSV. The latest analysis selected 56 issue pairs for human review. It highlights high-scoring weak-negative examples, low-scoring source-positive examples and method disagreements.
+A validation-only error-analysis tool now generates a summary report and two review files. The latest analysis selected 56 issue pairs. The diagnostic review_examples.csv shows source labels and model scores for developers; the reviewer_blind.csv hides those signals and provides direct GitHub issue links for independent adjudication. HUMAN_REVIEW_GUIDE.md defines the review categories and confidence scale.
 
 **These results are not definitive real-world accuracy measurements.** Source-positive pairs are recorded duplicate links, not independently re-labelled by our team. The unlinked negative pairs are weak and unverified; some may be genuine duplicates that the source dataset did not link. A model score is not proof that two issues share a root cause. Keep a human maintainer in the loop.
 
@@ -1141,6 +1141,7 @@ The following items describe possible future work. They are not promises that th
 - [x] Beginner guides for Claude Desktop, ChatGPT connection requirements, and local agents.
 - [x] Unit tests and Python-version CI.
 - [x] Offline benchmark comparison of lexical, BM25, semantic and hybrid similarity methods, plus a validation error-analysis review pack.
+- [x] Blind 56-pair human-review export with canonical issue links and adjudication guidance.
 - [ ] Repository-specific category and priority configuration.
 - [ ] Historical trend comparison between report snapshots.
 - [ ] Optional embeddings-based duplicate candidates using a local model.
