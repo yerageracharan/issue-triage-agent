@@ -66,9 +66,9 @@ def test_analysis_rejects_mismatched_pair_ids():
 
 
 def test_write_outputs_creates_report_json_and_csv(tmp_path):
-    validation = [{k: v for k, v in _row("p1", 1, "source_positive", 0.9, 0.8, 0.7, 0.6).items()
+    validation = [{k: v for k, v in _row("p1", 1, "source_positive", 0.1, 0.2, 0.3, 0.4).items()
                    if not k.endswith("_score")}]
-    scores = [{"split": "validation", **_row("p1", 1, "source_positive", 0.9, 0.8, 0.7, 0.6)}]
+    scores = [{"split": "validation", **_row("p1", 1, "source_positive", 0.1, 0.2, 0.3, 0.4)}]
     summary, review = analyze(validation, scores, _comparison(), top_n=1)
     write_outputs(tmp_path, summary, review)
     assert (tmp_path / "error_analysis_summary.json").is_file()
