@@ -105,3 +105,35 @@ Interpretation: among the pairs flagged by the current threshold, 87.28% carried
 The negative labels are unverified and may contain undiscovered duplicates. Therefore, a pair counted as a false positive may be a missed source annotation rather than a genuine detector mistake. The numbers measure agreement with the dataset labels, not proven real-world accuracy. The score is pairwise and does not establish top-three retrieval quality in a live repository scan.
 
 The test split must remain untouched for later final comparisons. Threshold tuning and algorithm experiments should use the validation split. No detector logic was changed in this baseline step.
+
+
+## Phase 3: compare similarity methods (validation only)
+
+The Phase 3 experiment compares the existing lexical scorer, a repository-specific BM25 index, local semantic embeddings, and an equal-weight BM25/semantic hybrid. It uses the training split for score scaling and threshold selection, then reports the frozen settings on validation. The held-out test split is not used for Phase 3 tuning.
+
+Run the comparison after preparing the benchmark:
+
+~~~powershell
+python -m pip install -e '.[benchmark,test,similarity-experiments]'
+python -m evaluation.benchmark.evaluate_similarity_methods --train-csv evaluation/benchmark/generated/train.csv --validation-csv evaluation/benchmark/generated/validation.csv --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase3
+~~~
+
+The optional dependency group keeps the standard Issue Triage Agent installation lightweight. The embedding model runs locally; no paid API key is required.
+
+### Early local comparison: lexical versus BM25
+
+On 13,908 training pairs and 2,984 validation pairs, a local run comparing the existing lexical scorer and BM25 produced:
+
+| Validation metric | Lexical | BM25 |
+|---|---:|---:|
+| ROC AUC | 0.6541 | 0.7031 |
+| Average precision | 0.6419 | 0.6780 |
+| F1 at training-selected threshold | 0.6804 | 0.7060 |
+| MRR@3 | 0.8102 | 0.8712 |
+| Recall@3 | 0.9933 | 0.9967 |
+
+For top-three retrieval, 598 qualifying incoming-issue query groups were evaluated; groups with fewer than two sampled candidates or no source-positive candidate were excluded. BM25 performed better than the lexical scorer on these validation measures. This is an early comparison, not a final test-set result or proof of real-world accuracy.
+
+The semantic embedding and hybrid methods are implemented but their full CPU run is still pending in GitHub Actions run [41356083341](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41356083341). Do not treat them as evaluated until the workflow saves the comparison artifact. The final test split remains untouched.
+
+As in Phases 1 and 2, positive labels are source-annotated and negative labels are weak/unverified unlinked candidates. Some negatives may be undiscovered duplicates. Validation metrics measure agreement with these dataset labels, not independently confirmed truth.
