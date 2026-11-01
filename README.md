@@ -1202,3 +1202,35 @@ The project uses the official Model Context Protocol Python SDK and GitHub's doc
 ## License
 
 This project is released under the MIT License. See [`LICENSE`](LICENSE).
+
+
+---
+
+## Bonus manga intermission
+
+Triage-kun has a few more reactions for the backlog battlefield. These are just for fun; the analysis rules and workflow above remain the source of truth.
+
+<p align="center">
+  <img src="docs/assets/triage-kun-stickers.svg" alt="Triage-kun reaction stickers: thinking, scanning, finding a clue, and requesting human review." width="920">
+</p>
+
+<p align="center">
+  <code>(¬_¬") THINKING</code>
+  &nbsp; <code>(⌐■_■) SCANNING</code>
+  &nbsp; <code>(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ FOUND IT</code>
+  &nbsp; <code>(ง'̀-'́)ง HUMAN REVIEW</code>
+</p>
+
+### Side quest: a bug report with actual clues
+
+<p align="center">
+  <img src="docs/assets/missing-details-manga.svg" alt="Three-panel comic: a vague bug report becomes a useful report with version, reproduction steps, expected behaviour, and actual behaviour." width="960">
+</p>
+
+### Side quest: the duplicate twins
+
+<p align="center">
+  <img src="docs/assets/duplicate-ghosts-manga.svg" alt="Two similar issue ghosts are investigated by Triage-kun. Similar wording is not proof of the same root cause." width="960">
+</p>
+
+<sub>TRIAGE-KUN FIELD NOTE 002 · 「あわてないで、まず確認。」 — Don't panic; check the evidence first.</sub>

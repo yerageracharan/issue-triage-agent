@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="300" viewBox="0 0 1120 300" role="img" aria-labelledby="title desc">
+<title id="title">Mini manga: duplicate ghosts under investigation</title>
+<desc id="desc">Two issue ghosts look similar. Triage-kun compares their clues and reminds the maintainer that similar wording does not prove the same root cause.</desc>
+<defs>
+ <pattern id="tone3" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#111" opacity=".2"/></pattern>
+ <style>
+  .frame{fill:#fff;stroke:#111;stroke-width:4;stroke-linejoin:round}
+  .line{fill:none;stroke:#111;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .txt{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-weight:900;fill:#111}
+  .jp{font-family:'Noto Sans JP','Yu Gothic',Meiryo,sans-serif;font-weight:900;fill:#111}
+ </style>
+</defs>
+<rect x="4" y="4" width="1112" height="292" rx="10" fill="#f5f1e9" stroke="#111" stroke-width="4"/>
+<g transform="translate(14 14)">
+ <rect width="332" height="264" class="frame"/>
+ <text x="15" y="25" class="txt" font-size="13">SUSPECT A / ISSUE #014</text>
+ <path d="M78 97 Q54 59 98 49 Q126 43 146 66 Q172 47 195 68 Q215 90 204 141 L204 165 L72 165Z" fill="#fff" class="line"/>
+ <circle cx="118" cy="108" r="6" fill="#111"/><circle cx="161" cy="108" r="6" fill="#111"/>
+ <path d="M127 132 Q140 143 153 132" class="line"/>
+ <text x="138" y="206" text-anchor="middle" class="txt" font-size="15">"CSV EXPORT CRASHES"</text>
+ <text x="138" y="230" text-anchor="middle" class="txt" font-size="11">SUSPICIOUSLY FAMILIAR...</text>
+</g>
+<g transform="translate(394 14)">
+ <rect width="332" height="264" class="frame"/>
+ <text x="15" y="25" class="txt" font-size="13">SUSPECT B / ISSUE #027</text>
+ <path d="M78 97 Q54 59 98 49 Q126 43 146 66 Q172 47 195 68 Q215 90 204 141 L204 165 L72 165Z" fill="#fff" class="line"/>
+ <circle cx="118" cy="108" r="6" fill="#111"/><circle cx="161" cy="108" r="6" fill="#111"/>
+ <path d="M127 132 Q140 143 153 132" class="line"/>
+ <text x="138" y="206" text-anchor="middle" class="txt" font-size="15">"EXPORTING CSV CRASHES"</text>
+ <text x="138" y="230" text-anchor="middle" class="txt" font-size="11">THE TWINS HAVE ARRIVED?!</text>
+</g>
+<g transform="translate(754 14)">
+ <rect width="352" height="264" class="frame"/>
+ <text x="15" y="25" class="txt" font-size="13">DETECTIVE / TRIAGE-KUN</text>
+ <path d="M75 100 L56 54 L105 77 L130 56 L156 78 L196 55 L181 116" fill="#fff" class="line"/>
+ <path d="M76 101 Q76 76 101 76 Q124 68 135 84 Q159 68 180 88 Q196 112 181 157 Q170 190 129 190 Q86 187 76 151Z" fill="#fff" class="line"/>
+ <path d="M99 127 Q110 116 120 127 M144 127 Q155 116 165 127" class="line"/>
+ <circle cx="225" cy="118" r="38" fill="#fff" stroke="#d62828" stroke-width="5"/>
+ <circle cx="225" cy="118" r="24" fill="none" class="line"/>
+ <path d="M251 145 L282 177" stroke="#d62828" stroke-width="8" stroke-linecap="round"/>
+ <path d="M34 207 L315 207" stroke="#111" stroke-width="2" stroke-dasharray="5 5"/>
+ <text x="176" y="235" text-anchor="middle" class="jp" font-size="17">似ている ≠ 同じ原因</text>
+ <text x="176" y="253" text-anchor="middle" class="txt" font-size="11">SAME WORDS ≠ SAME ROOT CAUSE.</text>
+</g>
+</svg>

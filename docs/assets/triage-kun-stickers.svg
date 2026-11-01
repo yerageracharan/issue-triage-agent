@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="280" viewBox="0 0 1040 280" role="img" aria-labelledby="title desc">
+<title id="title">Triage-kun reaction sticker sheet</title>
+<desc id="desc">Four cute manga-style cat mascot reactions: thinking, scanning an issue, finding a clue, and asking a human maintainer to review it. White panels, black ink and red accents.</desc>
+<defs>
+  <pattern id="dots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#111" opacity=".22"/></pattern>
+  <style>
+    .panel{fill:#fff;stroke:#171717;stroke-width:3}
+    .ink{fill:none;stroke:#171717;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    .small{fill:none;stroke:#171717;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .txt{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-weight:900;letter-spacing:1px;fill:#111}
+    .jp{font-family:'Noto Sans JP','Yu Gothic',Meiryo,sans-serif;font-weight:900;fill:#111}
+    .red{fill:#d62828}.redstroke{stroke:#d62828}
+  </style>
+</defs>
+<rect width="1040" height="280" rx="14" fill="#f5f1e9"/>
+<g transform="translate(10 10)">
+  <rect width="245" height="260" rx="12" class="panel"/>
+  <rect width="245" height="260" rx="12" fill="url(#dots)" opacity=".35"/>
+  <text x="16" y="26" class="txt" font-size="13">01 / THINKING...</text>
+  <path d="M71 98 L54 55 L100 76 L122 61 L151 79 L190 56 L177 111" fill="#fff" class="ink"/>
+  <path d="M72 96 Q69 71 90 72 Q112 66 128 80 Q154 68 172 85 Q190 106 179 151 Q170 184 125 188 Q80 185 69 151Z" fill="#fff" class="ink"/>
+  <path d="M93 129 Q105 118 117 129 M139 129 Q151 118 163 129" class="small"/>
+  <path d="M119 148 Q127 143 134 148" class="small"/>
+  <path d="M83 151 Q95 160 105 151 M149 151 Q160 160 171 151" stroke="#d62828" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M181 70 Q205 43 226 65 Q236 85 211 94 L198 108 L197 91 Q175 92 181 70Z" fill="#fff" class="small"/>
+  <text x="189" y="79" class="jp" font-size="15">うーん</text>
+  <text x="122" y="224" text-anchor="middle" class="txt" font-size="17">LET ME COOK.</text>
+  <text x="122" y="246" text-anchor="middle" class="txt red" font-size="12">考え中 / THINKING</text>
+</g>
+<g transform="translate(270 10)">
+  <rect width="245" height="260" rx="12" class="panel"/>
+  <rect width="245" height="260" rx="12" fill="url(#dots)" opacity=".35"/>
+  <text x="16" y="26" class="txt" font-size="13">02 / SCANNING...</text>
+  <path d="M69 98 L53 54 L100 76 L127 58 L151 78 L190 56 L176 112" fill="#fff" class="ink"/>
+  <path d="M70 97 Q70 73 93 73 Q115 68 128 82 Q154 68 172 86 Q190 106 179 151 Q170 184 125 188 Q80 185 69 151Z" fill="#fff" class="ink"/>
+  <path d="M94 126 L111 126 M143 126 L160 126" class="small"/>
+  <circle cx="126" cy="146" r="25" fill="#fff" class="ink"/>
+  <circle cx="126" cy="146" r="15" fill="none" class="small"/>
+  <path d="M145 165 L176 194" class="ink"/>
+  <path d="M54 125 L36 119 M192 125 L211 117 M58 164 L40 175" class="small"/>
+  <text x="122" y="224" text-anchor="middle" class="txt" font-size="17">ZOOM. INSPECT.</text>
+  <text x="122" y="246" text-anchor="middle" class="txt red" font-size="12">調査中 / SCANNING</text>
+</g>
+<g transform="translate(530 10)">
+  <rect width="245" height="260" rx="12" class="panel"/>
+  <rect width="245" height="260" rx="12" fill="url(#dots)" opacity=".35"/>
+  <text x="16" y="26" class="txt" font-size="13">03 / A CLUE!</text>
+  <path d="M68 98 L53 54 L100 76 L127 58 L151 78 L190 56 L176 112" fill="#fff" class="ink"/>
+  <path d="M70 97 Q70 73 93 73 Q115 68 128 82 Q154 68 172 86 Q190 106 179 151 Q170 184 125 188 Q80 185 69 151Z" fill="#fff" class="ink"/>
+  <path d="M94 126 Q106 115 118 126 M139 126 Q151 115 163 126" class="small"/>
+  <path d="M108 149 Q126 167 146 148" class="ink"/>
+  <circle cx="54" cy="75" r="17" fill="#d62828"/>
+  <path d="M46 75 L52 81 L64 66" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M185 72 L195 52 L203 71 L223 76 L203 84 L195 104 L187 84 L169 77Z" fill="#d62828" stroke="#111" stroke-width="2"/>
+  <text x="122" y="224" text-anchor="middle" class="txt" font-size="17">GOT A RECEIPT.</text>
+  <text x="122" y="246" text-anchor="middle" class="txt red" font-size="12">発見! / FOUND IT</text>
+</g>
+<g transform="translate(790 10)">
+  <rect width="240" height="260" rx="12" class="panel"/>
+  <rect width="240" height="260" rx="12" fill="url(#dots)" opacity=".35"/>
+  <text x="16" y="26" class="txt" font-size="13">04 / HUMAN REVIEW</text>
+  <path d="M66 99 L52 54 L99 76 L126 58 L150 78 L187 56 L174 112" fill="#fff" class="ink"/>
+  <path d="M67 98 Q68 73 92 73 Q115 68 127 82 Q153 68 171 86 Q189 106 178 151 Q169 184 124 188 Q79 185 67 151Z" fill="#fff" class="ink"/>
+  <path d="M91 126 L113 126 M139 126 L160 126" class="ink"/>
+  <path d="M111 151 Q124 142 137 151" class="small"/>
+  <rect x="151" y="103" width="62" height="42" rx="5" fill="#fff" stroke="#d62828" stroke-width="3" transform="rotate(8 151 103)"/>
+  <text x="158" y="125" class="jp red" font-size="12" transform="rotate(8 158 125)">要確認</text>
+  <path d="M42 72 L25 60 M194 72 L210 59" class="small"/>
+  <text x="120" y="224" text-anchor="middle" class="txt" font-size="16">NOT A VERDICT.</text>
+  <text x="120" y="246" text-anchor="middle" class="txt red" font-size="12">人間確認 / CHECK</text>
+</g>
+</svg>
