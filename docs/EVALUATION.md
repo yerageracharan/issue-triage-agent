@@ -209,6 +209,6 @@ After the review, choose and freeze a method and its settings. Then run one cont
 
 ### Reproducible run and artifact
 
-The successful full comparison workflow is [GitHub Actions run 41356083341](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41356083341). Its artifact is `issuedupeslite-benchmark-14` (artifact ID `13103676220`). It includes the prepared data, Phase 2 baseline, Phase 3 four-method comparison and Phase 4 review pack. The artifact is temporary and has a 30-day retention period.
+The completed Phase 3 comparison is [GitHub Actions run 41356083341](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41356083341). Its artifact is `issuedupeslite-benchmark-14` (artifact ID `13103676220`); it contains the prepared data, Phase 2 baseline and Phase 3 four-method comparison. This artifact predates the Phase 4 integration and does **not** contain Phase 4 outputs. The analyser and its tests were committed afterward, and the benchmark workflow has been updated to run Phase 4 before uploading. The first post-integration Actions run still needs to be verified. The Phase 4 report and review CSV have been generated and tested locally. Artifacts are temporary and have a 30-day retention period.
 
 The governing limitations remain: source positives are not independently re-labelled; unlinked negatives are weak and unverified; validation is used for method investigation rather than final performance claims; and similarity is evidence for human inspection, not proof of a shared root cause.
