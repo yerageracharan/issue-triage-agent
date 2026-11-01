@@ -177,3 +177,29 @@ In everyday language: when the current detector suggests a pair, that suggestion
 **These are not definitive real-world accuracy numbers.** The source positives are not independently re-labelled by this project, and negatives are merely pairs that were not linked in the source sample. Some may be undiscovered duplicates. The test is also pairwise: it does not measure the quality of the live top-three candidate list in a repository scan.
 
 Do not tune the algorithm or its threshold against this test split. Use the validation split for experiments. Keep the test split for a later, controlled comparison.
+
+
+## Phase 3: compare similarity methods
+
+The experiment script compares the production lexical scorer, BM25, local semantic embeddings, and a hybrid. Run it after preparing the benchmark:
+
+~~~powershell
+python -m pip install -e '.[benchmark,test,similarity-experiments]'
+python -m evaluation.benchmark.evaluate_similarity_methods --train-csv evaluation/benchmark/generated/train.csv --validation-csv evaluation/benchmark/generated/validation.csv --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase3
+~~~
+
+Only the training split is used to set score scaling and choose each method's threshold. These settings are frozen before validation is scored. The test split is kept out of method selection.
+
+The first local validation comparison (13,908 training pairs, 2,984 validation pairs) found that BM25 outperformed the current lexical scorer:
+
+| Validation metric | Lexical | BM25 |
+|---|---:|---:|
+| ROC AUC | 0.6541 | 0.7031 |
+| Average precision | 0.6419 | 0.6780 |
+| F1 at training-selected threshold | 0.6804 | 0.7060 |
+| MRR@3 | 0.8102 | 0.8712 |
+| Recall@3 | 0.9933 | 0.9967 |
+
+MRR@3 and Recall@3 were calculated over 598 incoming-issue groups that had at least two sampled candidates and at least one source-positive candidate. The local run compared lexical and BM25 only. Semantic and hybrid results are pending until the GitHub Actions comparison run produces its artifact.
+
+Important: these are validation comparisons against source-annotated positives and weak/unverified negatives, not final test-set or real-world accuracy claims. See [docs/EVALUATION.md](../../docs/EVALUATION.md) for context and limitations.
