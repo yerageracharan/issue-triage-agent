@@ -33,6 +33,7 @@ test = ["pytest>=8.0"]
 mcp = ["mcp[cli]>=2.0,<3"]
 openai-agent = ["openai-agents>=0.6.0", "mcp>=2.0,<3"]
 benchmark = ["datasets>=3.0.0"]
+similarity-experiments = ["sentence-transformers>=3.0.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
