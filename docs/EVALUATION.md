@@ -184,7 +184,9 @@ The semantic method raised fewer alerts on both sampled weak-negative groups at 
 
 The analysis selected the top 10 highest-scoring weak-negative pairs and bottom 10 source-positive low-score pairs for each method. Duplicate examples selected by multiple methods were included once per review reason, producing **56 unique review rows**.
 
-Each row in `review_examples.csv` includes issue titles, shortened body excerpts, source label quality, sample type, all four scores and thresholds, the methods that selected the example, and empty `human_adjudication` and `reviewer_notes` fields. The CSV is a review queue, not an automatically adjudicated answer key.
+The diagnostic `review_examples.csv` includes issue titles, shortened body excerpts, source label quality, sample type, all four scores and thresholds. Do not give this file to an adjudicator as the first view because its labels and model scores can bias judgement.
+
+The separate `reviewer_blind.csv` is the reviewer-facing file. It includes canonical GitHub links to both issues, titles, shortened descriptions, and blank adjudication fields, while omitting source labels, sample types, model names, scores, and selection reasons. `HUMAN_REVIEW_GUIDE.md` defines the four decisions (`same_underlying_issue`, `related_but_distinct`, `different_issues`, and `insufficient_context`), the confidence scale, and how to review independently.
 
 ### Reproduce Phase 4
 
@@ -209,6 +211,6 @@ After the review, choose and freeze a method and its settings. Then run one cont
 
 ### Reproducible run and artifact
 
-The completed Phase 3 comparison is [GitHub Actions run 41356083341](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41356083341). Its artifact is `issuedupeslite-benchmark-14` (artifact ID `13103676220`); it contains the prepared data, Phase 2 baseline and Phase 3 four-method comparison. This artifact predates the Phase 4 integration and does **not** contain Phase 4 outputs. The analyser and its tests were committed afterward, and the benchmark workflow has been updated to run Phase 4 before uploading. The first post-integration Actions run still needs to be verified. The Phase 4 report and review CSV have been generated and tested locally. Artifacts are temporary and have a 30-day retention period.
+The Phase 4-integrated benchmark workflow completed successfully in [GitHub Actions run 41358361732](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41358361732). Its artifact is `issuedupeslite-benchmark-19` (artifact ID `13104513422`) and includes the Phase 1 dataset, Phase 2 baseline, Phase 3 comparison, and Phase 4 error-analysis report and 56-row diagnostic review CSV. A follow-up workflow run is being triggered for the new blind-review export and guide. Artifacts are temporary and have a 30-day retention period.
 
 The governing limitations remain: source positives are not independently re-labelled; unlinked negatives are weak and unverified; validation is used for method investigation rather than final performance claims; and similarity is evidence for human inspection, not proof of a shared root cause.
