@@ -32,7 +32,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: issuedupeslite-benchmark-${{{ github.ref }}
+  group: issuedupeslite-benchmark-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -41,9 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      BENCHMARK_SEED: ${{{ github.event.inputs.seed || '42' }}
-      NEGATIVE_RATIO: ${{{ github.event.inputs.negative_ratio || '1.0' }}
-      HARD_NEGATIVE_FRACTION: ${{{ github.event.inputs.hard_negative_fraction || '0.5' }}
+      BENCHMARK_SEED: ${{ github.event.inputs.seed || '42' }}
+      NEGATIVE_RATIO: ${{ github.event.inputs.negative_ratio || '1.0' }}
+      HARD_NEGATIVE_FRACTION: ${{ github.event.inputs.hard_negative_fraction || '0.5' }}
 
     steps:
       - name: Check out repository
@@ -184,7 +184,7 @@ jobs:
       - name: Upload prepared benchmark artifact
         uses: actions/upload-artifact@v4
         with:
-          name: issuedupeslite-benchmark-${{{ github.run_number }}
+          name: issuedupeslite-benchmark-${{ github.run_number }}
           path: evaluation/benchmark/generated/
           if-no-files-found: error
           retention-days: 30
