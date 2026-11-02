@@ -25,6 +25,8 @@
 
 Issue Triage Agent reads a GitHub repository's issues and prepares a first-pass triage analysis. It suggests whether each report looks like a bug, feature request, documentation problem, question, or something else. It also suggests a provisional priority, points out details that may be missing, and lists other issues that look similar.
 
+**Benchmark engineering walkthrough (Phases 1-6):** [Read the complete end-to-end guide](docs/BENCHMARK_ENGINEERING_WALKTHROUGH.md) - documents how the original duplicate detector was benchmarked using IssueDupesLite issue-pair data from 1,000 repositories, how leakage-safe train/validation/test splits were created, how Lexical/BM25/Semantic/Hybrid were compared, and how the frozen final test was run.
+
 You can use it in three ways:
 
 1. **As a command-line tool (CLI):** run a command in PowerShell, Terminal, or another shell and receive Markdown and JSON reports.
