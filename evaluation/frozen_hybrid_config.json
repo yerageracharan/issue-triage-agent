@@ -26,5 +26,6 @@
     "Do not alter weights, model, preprocessing, ranking rule, or candidate eligibility after viewing test results.",
     "Report weak-negative metrics as agreement with weak labels, not confirmed false-positive rates.",
     "Keep the baseline comparison on the same held-out test pairs."
-  ]
+  ],
+  "frozen_before_test_evaluation": true
 }
