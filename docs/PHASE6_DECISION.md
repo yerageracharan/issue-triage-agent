@@ -1,6 +1,6 @@
 # Phase 6 decision record: frozen hybrid candidate ranker
 
-**Status:** Configuration frozen; held-out test execution is in progress.  
+**Status:** Held-out test completed successfully; frozen results recorded below.  
 **Decision ID:** `phase6-frozen-hybrid-v1`  
 **Repository:** `yerageracharan/issue-triage-agent`
 
@@ -65,3 +65,38 @@ The test labels are used only to calculate metrics. They must not be used to sel
 - Weak negatives are not confirmed non-duplicates. Their alerts must not be reported as verified false positives.
 - If changes are necessary, tune using a new validation dataset and reserve a new untouched test set for the next final evaluation.
 - Keep the production agent read-only. It may recommend candidates but must not close issues, apply labels, assign people or post comments.
+
+
+## Held-out test results
+
+The frozen evaluator completed successfully in [GitHub Actions run 41366209127](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127). The run uploaded artifact `issuedupeslite-benchmark-26` (artifact ID `13107604354`).
+
+- Test size: 2,982 pairs across 150 repositories.
+- Training size: 13,908 pairs across 700 repositories.
+- Train/test repository overlap: none.
+- Recomputed training threshold: `0.41291124292046016`, an exact match to the frozen value.
+- Top-three retrieval groups evaluated: 620.
+
+| Metric | Existing detector | Frozen Hybrid |
+|---|---:|---:|
+| Precision | 87.28% | 65.60% |
+| Recall | 10.13% | 85.45% |
+| F1 | 18.15% | 74.22% |
+| ROC AUC | 64.10% | 78.90% |
+| Average precision | 65.66% | 77.65% |
+| MRR@3 | 79.76% | 92.15% |
+| Recall@3 | 98.87% | 99.68% |
+
+At the frozen threshold, Hybrid recorded 1,274 source-positive alerts, 668 weak-negative alerts, 823 weak negatives not flagged, and 217 source-positive pairs missed. The baseline recorded 151 source-positive alerts, 22 weak-negative alerts, 1,469 weak negatives not flagged, and 1,340 source-positive pairs missed.
+
+For candidate ranking, Hybrid reached MRR@3 **0.921505** and Recall@3 **0.996774**, compared with **0.797581** and **0.988710** for the existing detector. These metrics include only groups with at least two sampled candidates and at least one source-positive pair.
+
+## Decision after the test
+
+The test supports using Hybrid as a **read-only ranked candidate recommender for human review**, subject to further validation. It does not support automatic duplicate confirmation or automatic issue mutation. Precision decreased relative to the existing conservative detector; consequently, candidate suggestions must be clearly labelled as suggestions and supported with evidence for a maintainer to inspect.
+
+Do not tune this frozen configuration using these test results. Any future model/threshold change requires a new validation set and a new untouched test split. Independent human adjudication of the blinded 56-pair review sample remains outstanding.
+
+## Artifact contents and reproducibility caveat
+
+Artifact `issuedupeslite-benchmark-26` includes the test JSON and Markdown report, per-pair scores, top-three candidate CSV, benchmark splits, baseline, validation comparison, and blinded Phase 4 reviewer pack. The model identifier `sentence-transformers/all-MiniLM-L6-v2` was frozen, but its upstream model revision was not explicitly pinned; exact embedding-weight reproducibility is a known limitation.
