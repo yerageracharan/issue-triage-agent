@@ -252,7 +252,7 @@ python -m pytest tests/test_error_analysis.py
 
 Give reviewers `reviewer_blind.csv`, not the diagnostic `review_examples.csv`. Open both original GitHub issues, read their full descriptions and discussion, and apply the four-way rubric in [docs/HUMAN_REVIEW_GUIDE.md](../../docs/HUMAN_REVIEW_GUIDE.md): `same_underlying_issue`, `related_but_distinct`, `different_issues`, or `insufficient_context`. Record confidence and evidence notes. Keep the original blind CSV unchanged and save completed copies separately. Ideally, have two reviewers independently label a subset and resolve disagreements.
 
-## Phase 5: choose, freeze and test
+## Phase 5: review evidence, then freeze and test
 
 After reviewing a representative sample, choose the method and operating point that best match the product's needs. Freeze the model version, preprocessing, score transformation, threshold and ranking rules. Then run one controlled comparison against the held-out test split. Do not tune repeatedly against that split.
 
@@ -261,3 +261,38 @@ A strong validation score is not a production guarantee. Real-world validation o
 ### Recorded GitHub Actions run
 
 The latest fully completed Phase 4-integrated benchmark run is [41358361732](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41358361732). Its artifact is `issuedupeslite-benchmark-19` (ID `13104513422`) and contains the prepared data, Phase 2 baseline, Phase 3 comparison, Phase 4 error report, and the original 56-row diagnostic review CSV. The blind-review exporter and guide were committed afterward. The updated analyzer and tests pass the full CI matrix on Python 3.10, 3.11, 3.12, and 3.13 (45 tests per version). A fresh benchmark workflow is queued/in progress to verify the new `reviewer_blind.csv` and `HUMAN_REVIEW_GUIDE.md` are generated and uploaded. Artifacts are retained for 30 days. The artifact includes third-party dataset-derived issue text; retain the included `ATTRIBUTION.md` and follow the source dataset's licence when using or redistributing derived material.
+
+
+## Phase 6: frozen hybrid held-out evaluation
+
+Phase 6 evaluates the selected Hybrid ranker exactly once on the untouched test split. It verifies the dataset revision and fingerprint, repository-level isolation, pair IDs, and the training-only threshold before calculating test metrics. It also compares the unchanged production detector on the same pairs.
+
+Run after the benchmark data is prepared:
+
+~~~powershell
+python -m evaluation.frozen_hybrid --train-csv evaluation/benchmark/generated/train.csv --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --config evaluation/frozen_hybrid_config.json --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase6
+~~~
+
+### Final held-out results
+
+The frozen evaluator ran successfully in [GitHub Actions run 41366209127](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127). Test size: 2,982 pairs across 150 repositories. Training size: 13,908 pairs across 700 repositories. Training and test repository sets were disjoint. The training-derived threshold recomputed exactly to the frozen value of `0.41291124292046016`.
+
+| Metric | Existing detector | Frozen Hybrid |
+|---|---:|---:|
+| Precision | 87.28% | 65.60% |
+| Recall | 10.13% | 85.45% |
+| F1 | 18.15% | 74.22% |
+| ROC AUC | 64.10% | 78.90% |
+| Average precision | 65.66% | 77.65% |
+| MRR@3 | 79.76% | 92.15% |
+| Recall@3 | 98.87% | 99.68% |
+
+The top-three retrieval comparison used 620 eligible incoming-issue groups. Hybrid achieved MRR@3 of 0.9215 and Recall@3 of 0.9968, compared with 0.7976 and 0.9887 for the baseline.
+
+Hybrid's 668 alerts among weak negatives are **not verified false positives**. Unlinked pairs may include genuine duplicates that the source did not annotate. Hybrid should therefore be integrated only as a read-only candidate recommender, with maintainers making the final decision. Do not automatically close issues, apply labels, assign people or post comments.
+
+### Artifact
+
+The completed run uploaded `issuedupeslite-benchmark-26` (ID `13107604354`), retained until December 2, 2026. It contains `phase6_final_test.json`, `phase6_final_test_report.md`, `test_pair_scores.csv`, `top3_ranked_candidates.csv`, and all prior benchmark and reviewer outputs. See [the workflow run and artifact page](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127).
+
+**Remaining limitations:** source positives have not all been independently adjudicated; unlinked negatives remain weak labels; top-three metrics exclude groups with fewer than two candidates or no source-positive; and the embedding model's upstream revision was not pinned, so the model identifier alone does not guarantee byte-identical embeddings in a future rerun. Do not tune this configuration against the held-out test result.
