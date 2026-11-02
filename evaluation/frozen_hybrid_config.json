@@ -1,0 +1,30 @@
+{
+  "decision_id": "phase6-frozen-hybrid-v1",
+  "selected_method": "hybrid",
+  "rationale": "The product's primary output is a ranked shortlist of duplicate candidates for a developer. On the validation split, hybrid had the best MRR@3 (0.9177814939) and Recall@3 (1.0) among the four evaluated methods. Semantic had the best pairwise F1 (0.7637006482), but the selection criterion for this phase is top-three candidate ranking.",
+  "threshold": 0.41291124292046016,
+  "threshold_selection": "F1-maximising threshold selected using training labels only; frozen before held-out test evaluation.",
+  "hybrid_weights": {
+    "bm25": 0.5,
+    "semantic": 0.5
+  },
+  "score_calibration": "Each component is transformed using a logistic mapping of a z-score. Means and standard deviations are calculated from training scores only and reused for test scores.",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedding_max_seq_length": 256,
+  "retrieval_k": 3,
+  "dataset_id": "primordic/IssueDupesLite",
+  "dataset_revision": "902b5805afa93e8cb018bd3c860c0f3eba55029e",
+  "dataset_fingerprint": "24bb969f9437e210",
+  "seed": 42,
+  "train_pairs": 13908,
+  "validation_pairs": 2984,
+  "test_pairs": 2982,
+  "test_repositories": 150,
+  "human_review_status": "The Phase 5 audit was AI-assisted. No independent human adjudications have been entered; AI notes are not used as benchmark labels or for threshold tuning.",
+  "guardrails": [
+    "Do not change the threshold after viewing test results.",
+    "Do not alter weights, model, preprocessing, ranking rule, or candidate eligibility after viewing test results.",
+    "Report weak-negative metrics as agreement with weak labels, not confirmed false-positive rates.",
+    "Keep the baseline comparison on the same held-out test pairs."
+  ]
+}
