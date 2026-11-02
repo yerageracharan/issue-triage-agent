@@ -225,6 +225,33 @@ The test result is a one-time final measurement. Do not change the method, thres
 
 ### Reproducible run and artifact
 
-The latest completed pre-Phase-6 artifact is from [run 41362182100](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41362182100), artifact `issuedupeslite-benchmark-24` (ID `13106605066`). The updated Phase 6 workflow is [run 41366209127](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127); it now executes the frozen hybrid test evaluator after Phase 4 and uploads the Phase 6 report and CSV outputs. Its final status and artifact should be recorded only after that run completes. The blind reviewer CSV and separate 56-pair reviewer workbook remain available; independent human labels are still pending. Artifacts are temporary and have a 30-day retention period.
+The Phase 6 benchmark workflow [run 41366209127](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127) completed successfully. It uploaded artifact `issuedupeslite-benchmark-26` (ID `13107604354`), which includes the frozen Phase 6 JSON/Markdown reports, per-pair test scores, top-three candidate rankings, prepared dataset splits, baseline, Phase 3 comparison, and Phase 4 blind review pack. The artifact was created on November 2, 2026 and is retained until December 2, 2026.
 
-The governing limitations remain: source positives are not independently re-labelled; unlinked negatives are weak and unverified; validation is used for method investigation rather than final performance claims; and similarity is evidence for human inspection, not proof of a shared root cause.
+The blind reviewer CSV and separate 56-pair reviewer workbook remain available; independent human labels are still pending. The benchmark positives are source-annotated and have not all been independently re-labelled. Unlinked negatives are weak and unverified. Similarity is evidence for human inspection, not proof of a shared root cause.
+
+
+### Phase 6 held-out test results
+
+The frozen Hybrid configuration was evaluated once on the test split: **2,982 pairs from 150 repositories**. The 13,908 training pairs came from 700 other repositories. The repository split was verified as leakage-free, and the training-derived threshold recomputed to exactly `0.41291124292046016`, matching the value frozen before test evaluation.
+
+| Metric | Existing detector | Frozen Hybrid |
+|---|---:|---:|
+| Precision | 87.28% | 65.60% |
+| Recall | 10.13% | 85.45% |
+| F1 | 18.15% | 74.22% |
+| ROC AUC | 64.10% | 78.90% |
+| Average precision | 65.66% | 77.65% |
+| MRR@3 | 79.76% | 92.15% |
+| Recall@3 | 98.87% | 99.68% |
+
+The Hybrid's frozen classification threshold produced 1,274 source-positive alerts, 668 alerts among weak negatives, 823 weak negatives not flagged, and 217 source-positive pairs below threshold. The unchanged detector produced 151 source-positive alerts, 22 weak-negative alerts, 1,469 weak negatives not flagged, and 1,340 source-positive pairs below threshold.
+
+For the ranked-candidate experience, both methods were evaluated on the same **620 eligible incoming-issue groups** (at least two sampled candidates and at least one source-positive pair). Hybrid achieved MRR@3 of 0.921505 and Recall@3 of 0.996774; the baseline achieved 0.797581 and 0.988710 respectively.
+
+**Interpretation:** Hybrid substantially improves recall and ranking quality on this benchmark sample, but its precision is lower. This is an appropriate result for a system that surfaces a short candidate list for human inspection; it is not a reason to auto-confirm duplicates. A weak-negative alert is not a verified false positive because some unlinked pairs may be undiscovered duplicates.
+
+### Reproduction and decision guardrails
+
+Download the `issuedupeslite-benchmark-26` artifact from [the completed run](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127), or run `evaluation.frozen_hybrid` using the command above after preparing the same dataset revision and splits. The artifact includes `phase6/phase6_final_test.json`, `phase6/phase6_final_test_report.md`, `phase6/test_pair_scores.csv`, and `phase6/top3_ranked_candidates.csv`.
+
+Do not change the frozen threshold, weights, model, preprocessing or ranking rule based on this test result. Further improvement work requires a new validation set and a fresh untouched test set. Before any production integration, independently adjudicate the 56 blind-review examples and validate the ranker in read-only/shadow mode on representative current repositories. The embedding model name is frozen, but its upstream model revision was not pinned in the configuration; exact model-weight reproducibility is therefore a remaining limitation.
