@@ -1302,4 +1302,10 @@ The current duplicate detector has now been measured on the held-out IssueDupesL
 
 ### Phase 3: compare duplicate-detection methods
 
-The first validation comparison shows BM25 ahead of the current lexical method (ROC AUC 0.7031 vs 0.6541; average precision 0.6780 vs 0.6419). Local semantic embeddings and the hybrid are implemented, but their full comparison is still pending. These are validation findings, not final test-set or real-world accuracy claims. See [the evaluation record](docs/EVALUATION.md).
+The validation comparison evaluated lexical, BM25, semantic embeddings and an equal-weight hybrid. Hybrid was selected for Phase 6 because its top-three ranking metrics best matched the product's shortlist use case. Semantic had the strongest pairwise F1 on validation. See [the full evaluation record](docs/EVALUATION.md).
+
+### Phase 6: frozen held-out evaluation completed
+
+The frozen Hybrid ranker was evaluated on 2,982 held-out pairs across 150 repositories. Compared with the unchanged detector, Hybrid improved benchmark F1 from **18.15% to 74.22%**, recall from **10.13% to 85.45%**, and MRR@3 from **79.76% to 92.15%**. Precision fell from 87.28% to 65.60%, so the system should surface candidate suggestions for human review rather than automatically confirm duplicates.
+
+These are benchmark-label results, not verified real-world accuracy. The negative examples are weak/unverified, independent human adjudication is still pending, and the embedding model's upstream revision was not explicitly pinned. The completed [Phase 6 GitHub Actions run](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127) contains artifact `issuedupeslite-benchmark-26`. See [evaluation details and limitations](docs/EVALUATION.md) and the [Phase 6 decision record](docs/PHASE6_DECISION.md).
