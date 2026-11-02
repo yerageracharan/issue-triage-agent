@@ -203,14 +203,28 @@ The command writes:
 
 The Phase 4 analyser uses only the Python standard library. It validates that validation and score files contain the same pair IDs, labels and repositories before producing results. Its tests cover metric calculation, review selection, file generation and mismatched input rejection.
 
-### What happens next
+### Phase 5 status: evidence audit and human review
 
-The next step is to review and adjudicate a representative sample of the 56 examples. In particular, inspect high-scoring weak-negative alerts to identify missing source links, and source-positive low-score pairs to understand why the methods struggled. Keep these human labels separate from the original source labels.
+All 56 selected pairs received a separate AI-assisted evidence assessment based on original issue descriptions and available discussion comments. The preliminary breakdown is 26 likely same underlying issue, 16 related but distinct, 13 different, and 1 insufficient context. These are diagnostic AI assessments only, not independent human adjudications and not replacements for source labels. The reviewer workbook remains blinded and its decision fields are still blank. Independent human review remains outstanding.
 
-After the review, choose and freeze a method and its settings. Then run one controlled comparison on the held-out test split. Only after that should we consider integrating the selected approach into production duplicate-candidate detection. The agent must remain read-only: it can recommend candidates, but it must not close issues, add labels, assign people or post comments.
+### Phase 6: freeze the candidate-ranking method and evaluate once
+
+The product is intended to show developers a short ranked list of possible duplicates. On validation, Hybrid had the highest MRR@3 (0.917781) and Recall@3 (1.0000) of the four methods; Semantic had the best pairwise F1 (0.763701). We therefore froze Hybrid for Phase 6 because top-three candidate ranking is the primary product objective. This is a use-case decision, not a claim that Hybrid is best at every metric.
+
+The frozen configuration is recorded in `evaluation/frozen_hybrid_config.json`: equal BM25/Semantic weighting, `sentence-transformers/all-MiniLM-L6-v2`, maximum sequence length 256, top 3 candidates, and the threshold 0.41291124292046016 selected on training data. The new `evaluation.frozen_hybrid` runner checks dataset revision, fingerprint, repository separation, pair IDs, and the training-derived threshold before evaluating the held-out test split. It does not tune on test labels.
+
+Run the evaluator directly after Phase 1–4 artifacts exist:
+
+~~~powershell
+python -m evaluation.frozen_hybrid --train-csv evaluation/benchmark/generated/train.csv --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --config evaluation/frozen_hybrid_config.json --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase6
+~~~
+
+It writes `phase6_final_test.json`, `phase6_final_test_report.md`, `test_pair_scores.csv`, `top3_ranked_candidates.csv`, and a frozen configuration snapshot. The benchmark workflow now runs this after Phase 4 and uploads the outputs with the rest of the artifact.
+
+The test result is a one-time final measurement. Do not change the method, threshold, weights, preprocessing or ranking rule after reading it. If the method needs changes, use a new validation set and reserve a new untouched test set. The agent remains read-only: it may recommend candidates but must not close issues, add labels, assign people or post comments.
 
 ### Reproducible run and artifact
 
-The latest full benchmark workflow completed successfully in [GitHub Actions run 41362182100](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41362182100). Its artifact is `issuedupeslite-benchmark-24` (artifact ID `13106605066`) and includes the prepared dataset, baseline, four-method comparison, Phase 4 error analysis, the diagnostic review CSV, the blind reviewer CSV, and the human review guide. The blind reviewer CSV contains 56 pairs with no source labels or model scores. A separate reviewer workbook with dropdown decisions and full captured issue descriptions was prepared for Phase 5. Automated tests pass on Python 3.10-3.13, with 45 tests per version. Artifacts are temporary and have a 30-day retention period.
+The latest completed pre-Phase-6 artifact is from [run 41362182100](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41362182100), artifact `issuedupeslite-benchmark-24` (ID `13106605066`). The updated Phase 6 workflow is [run 41366209127](https://github.com/yerageracharan/issue-triage-agent/actions/runs/41366209127); it now executes the frozen hybrid test evaluator after Phase 4 and uploads the Phase 6 report and CSV outputs. Its final status and artifact should be recorded only after that run completes. The blind reviewer CSV and separate 56-pair reviewer workbook remain available; independent human labels are still pending. Artifacts are temporary and have a 30-day retention period.
 
 The governing limitations remain: source positives are not independently re-labelled; unlinked negatives are weak and unverified; validation is used for method investigation rather than final performance claims; and similarity is evidence for human inspection, not proof of a shared root cause.
