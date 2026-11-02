@@ -77,7 +77,7 @@ def test_validate_inputs_rejects_changed_dataset_revision():
 
 def test_frozen_threshold_must_match_training_derived_value():
     check_frozen_threshold(0.41291124292046016, 0.41291124292046016)
-    with pytest.raises(ValueError, match="does not match"):
+    with pytest.raises(ValueError, match="no longer matches the frozen decision"):
         check_frozen_threshold(0.50, 0.41291124292046016)
 
 
