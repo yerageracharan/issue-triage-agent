@@ -1142,6 +1142,8 @@ The following items describe possible future work. They are not promises that th
 - [x] Unit tests and Python-version CI.
 - [x] Offline benchmark comparison of lexical, BM25, semantic and hybrid similarity methods, plus a validation error-analysis review pack.
 - [x] Blind 56-pair human-review export with canonical issue links and adjudication guidance.
+- [x] AI-assisted evidence audit of all 56 selected pairs (kept separate from blinded human labels).
+- [ ] Frozen hybrid top-three candidate ranker evaluated on the untouched held-out test split.
 - [ ] Repository-specific category and priority configuration.
 - [ ] Historical trend comparison between report snapshots.
 - [ ] Optional embeddings-based duplicate candidates using a local model.
