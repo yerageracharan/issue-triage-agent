@@ -12,6 +12,9 @@ on:
       - "tests/test_baseline_evaluation.py"
       - "tests/test_similarity_experiments.py"
       - "tests/test_error_analysis.py"
+      - "tests/test_frozen_hybrid.py"
+      - "evaluation/frozen_hybrid.py"
+      - "evaluation/frozen_hybrid_config.json"
       - "pyproject.toml"
   workflow_dispatch:
     inputs:
@@ -67,7 +70,7 @@ jobs:
           python -m pip install -e ".[benchmark,test,similarity-experiments]"
 
       - name: Test benchmark preparation and baseline evaluation logic
-        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py tests/test_similarity_experiments.py tests/test_error_analysis.py
+        run: python -m pytest tests/test_benchmark.py tests/test_baseline_evaluation.py tests/test_similarity_experiments.py tests/test_error_analysis.py tests/test_frozen_hybrid.py
 
       - name: Download IssueDupesLite and prepare repository-level splits
         run: |
@@ -198,6 +201,9 @@ jobs:
 
       - name: Run Phase 4 validation error analysis and prepare human review pack
         run: python -m evaluation.benchmark.analyze_similarity_errors --validation-csv evaluation/benchmark/generated/validation.csv --scores-csv evaluation/benchmark/generated/phase3/similarity_scores.csv --comparison-json evaluation/benchmark/generated/phase3/similarity_comparison.json --output-dir evaluation/benchmark/generated/phase4 --top-n 10
+
+      - name: Run frozen hybrid evaluation on held-out test split
+        run: python -m evaluation.frozen_hybrid --train-csv evaluation/benchmark/generated/train.csv --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --config evaluation/frozen_hybrid_config.json --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase6
 
       - name: Upload benchmark, baseline, Phase 3 comparison, and Phase 4 review pack
         uses: actions/upload-artifact@v4
