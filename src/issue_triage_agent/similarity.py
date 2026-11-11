@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 from difflib import SequenceMatcher
 
@@ -56,6 +57,17 @@ def similarity_score(left: TriageResult, right: TriageResult) -> float:
 
 def attach_duplicate_candidates(results: list[TriageResult], threshold: float = 0.48, max_candidates: int = 3) -> None:
     """Attach likely duplicate candidates, keeping scores explicitly heuristic."""
+    if not isinstance(results, list) or any(not isinstance(item, TriageResult) for item in results):
+        raise TypeError("results must be a list of TriageResult objects")
+    if (
+        isinstance(threshold, bool)
+        or not isinstance(threshold, (int, float))
+        or not math.isfinite(threshold)
+        or not 0 <= threshold <= 1
+    ):
+        raise ValueError("threshold must be a finite number between 0 and 1")
+    if isinstance(max_candidates, bool) or not isinstance(max_candidates, int) or not 0 <= max_candidates <= 50:
+        raise ValueError("max_candidates must be an integer between 0 and 50")
     for index, result in enumerate(results):
         candidates: list[dict[str, object]] = []
         for other_index, other in enumerate(results):
