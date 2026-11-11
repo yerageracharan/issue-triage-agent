@@ -1,5 +1,7 @@
 # Issue Triage Agent
 
+**[Documentation and maintainer map](docs/README.md)** · [Architecture](docs/ARCHITECTURE.md) · [Evaluation](docs/EVALUATION.md)
+
 <p align="center">
   <strong>A practical GitHub issue analyst you can run yourself or connect to an AI assistant.</strong>
 </p>
