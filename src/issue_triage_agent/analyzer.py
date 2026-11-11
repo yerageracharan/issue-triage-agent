@@ -36,6 +36,12 @@ def _normalise(value: str) -> str:
     return re.sub(r"\s+", " ", value.casefold()).strip()
 
 
+def _contains_phrase(text: str, phrase: str) -> bool:
+    """Match complete words/phrases, not accidental substrings such as 'bug' in 'debugger'."""
+    pattern = rf"(?<![a-z0-9-]){re.escape(phrase)}(?![a-z0-9-])"
+    return re.search(pattern, text) is not None
+
+
 def classify_category(issue: Issue) -> tuple[str, str, list[str]]:
     text = _normalise(f"{issue.title}\n{issue.body}")
     labels = {label.casefold().strip() for label in issue.labels}
