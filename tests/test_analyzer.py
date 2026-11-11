@@ -55,7 +55,7 @@ def test_debugger_word_does_not_trigger_bug_category():
 
 
 def test_bug_phrase_still_matches_as_a_complete_word():
-    result = analyse_issue(make_issue("Bug: debugger crashes", "The debugger crashes on startup."))
+    result = analyse_issue(make_issue("Bug: application crashes", "The application crashes on startup."))
     assert result.category == "bug"
     assert result.priority == "P1"
 

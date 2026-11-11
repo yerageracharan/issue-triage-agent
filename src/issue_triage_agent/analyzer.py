@@ -9,7 +9,7 @@ from .models import Issue, TriageResult
 
 
 _CATEGORY_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("bug", ("bug", "crash", "exception", "traceback", "regression", "not working", "does not work", "doesn't work", "broken", "fails", "failure", "incorrect result", "unexpected behavior", "unexpected behaviour")),
+    ("bug", ("bug", "crash", "crashes", "exception", "traceback", "regression", "not working", "does not work", "doesn't work", "broken", "fails", "failure", "incorrect result", "unexpected behavior", "unexpected behaviour")),
     ("feature", ("feature request", "enhancement", "would be nice", "please add", "add support", "support for", "new feature", "proposal")),
     ("documentation", ("documentation", "docs", "readme", "typo", "spelling", "clarify the", "unclear instructions")),
     ("question", ("how do i", "how can i", "how to", "question", "help wanted", "is it possible")),
