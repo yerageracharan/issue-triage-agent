@@ -206,7 +206,7 @@ jobs:
         run: python -m evaluation.frozen_hybrid --train-csv evaluation/benchmark/generated/train.csv --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --config evaluation/frozen_hybrid_config.json --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase6
 
       - name: Upload benchmark, baseline, Phase 3 comparison, and Phase 4 review pack
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: issuedupeslite-benchmark-${{ github.run_number }}
           path: evaluation/benchmark/generated/
