@@ -61,8 +61,8 @@ def test_bug_phrase_still_matches_as_a_complete_word():
 
 
 def test_debugger_does_not_trigger_p0_security_phrase():
-    result = analyse_issue(make_issue("Debugging security settings", "The debugger output mentions a security vulnerability scanner."))
-    assert result.priority == "P0"
+    result = analyse_issue(make_issue("Debugging security settings", "The debugger prints security settings during startup."))
+    assert result.priority == "P2"
 
 
 def test_unrelated_substrings_do_not_trigger_crash_priority():
