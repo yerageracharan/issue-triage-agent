@@ -4,6 +4,6 @@ contact_links:
   - name: Setup, usage, and troubleshooting
     url: https://github.com/yerageracharan/issue-triage-agent/blob/main/README.md
     about: Check the README and docs before opening a support issue.
-  - name: Private security vulnerability report
+  - name: Security policy and private disclosure instructions
     url: https://github.com/yerageracharan/issue-triage-agent/blob/main/SECURITY.md
     about: Read the security policy. Do not disclose vulnerabilities in public issues.

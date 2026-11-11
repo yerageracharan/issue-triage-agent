@@ -1,0 +1,57 @@
+name: Documentation issue
+description: Report inaccurate, missing, outdated, or confusing project documentation.
+title: "[Docs]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for documentation problems only. For product defects, use Bug report; for new capabilities, use Feature request.
+        Do not include API keys, tokens, private documents, or other sensitive data.
+  - type: input
+    id: doc_location
+    attributes:
+      label: Affected documentation path or URL
+      description: Identify the README, guide, code example, or section.
+      placeholder: docs/README.md — Installation
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What does the documentation currently say or omit?
+      description: Quote the relevant passage or describe the missing information.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should it say instead?
+      description: Provide the expected correction or the missing explanation.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: How can the correction be verified?
+      description: Include the command, platform, version, or workflow that reproduces the documentation mismatch.
+      placeholder: "Windows 11, Python 3.12: the documented command fails with ..."
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: impact
+    attributes:
+      label: Who is affected?
+      description: Explain whether this blocks setup, gives an incorrect result, or causes avoidable confusion.
+    validations:
+      required: true
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Can you submit a documentation fix?
+      options:
+        - Yes
+        - Maybe, with guidance
+        - No
+    validations:
+      required: true
