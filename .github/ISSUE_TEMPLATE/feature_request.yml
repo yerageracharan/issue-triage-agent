@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose a triage, evaluation, or integration improvement.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evaluation
+    attributes:
+      label: Evaluation plan
+      description: Include representative synthetic issues, expected outcomes, and false-positive/false-negative checks.
+    validations:
+      required: true
+  - type: textarea
+    id: write_actions
+    attributes:
+      label: Repository write actions
+      description: State whether the proposal reads GitHub data only or would create comments, labels, assignments, or state changes.
