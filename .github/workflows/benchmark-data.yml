@@ -53,10 +53,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
           cache: pip
@@ -206,7 +206,7 @@ jobs:
         run: python -m evaluation.frozen_hybrid --train-csv evaluation/benchmark/generated/train.csv --test-csv evaluation/benchmark/generated/test.csv --manifest evaluation/benchmark/generated/manifest.json --config evaluation/frozen_hybrid_config.json --model sentence-transformers/all-MiniLM-L6-v2 --output-dir evaluation/benchmark/generated/phase6
 
       - name: Upload benchmark, baseline, Phase 3 comparison, and Phase 4 review pack
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: issuedupeslite-benchmark-${{ github.run_number }}
           path: evaluation/benchmark/generated/
