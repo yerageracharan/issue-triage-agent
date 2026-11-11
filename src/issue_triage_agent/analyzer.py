@@ -51,7 +51,7 @@ def classify_category(issue: Issue) -> tuple[str, str, list[str]]:
             category = label_categories[label]
             return category, "high", [f"Matched existing label: {label}"]
     for category, phrases in _CATEGORY_RULES:
-        matched = [phrase for phrase in phrases if phrase in text]
+        matched = [phrase for phrase in phrases if _contains_phrase(text, phrase)]
         if matched:
             confidence = "high" if len(matched) > 1 or matched[0] in text[: len(issue.title) + 1] else "medium"
             return category, confidence, [f"Matched wording: {', '.join(matched[:3])}"]
@@ -65,9 +65,9 @@ def assign_priority(issue: Issue, category: str) -> tuple[str, list[str]]:
             return priority, [f"Existing repository label indicates {priority} priority."]
 
     text = _normalise(f"{issue.title}\n{issue.body}")
-    if any(phrase in text for phrase in _P0_PHRASES):
+    if any(_contains_phrase(text, phrase) for phrase in _P0_PHRASES):
         return "P0", ["Potential severe impact language detected; verify impact before escalation."]
-    if any(phrase in text for phrase in _P1_PHRASES):
+    if any(_contains_phrase(text, phrase) for phrase in _P1_PHRASES):
         return "P1", ["Potentially release-blocking or major workflow impact language detected."]
     if category in {"question", "documentation"}:
         return "P3", [f"{category.title()} issues are assigned a provisional low priority."]

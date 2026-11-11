@@ -46,3 +46,26 @@ def test_empty_issue_body_is_flagged():
 def test_existing_priority_label_is_respected():
     result = analyse_issue(make_issue("Bug report", "It crashes.", ["bug", "priority: high"]))
     assert result.priority == "P1"
+
+
+def test_debugger_word_does_not_trigger_bug_category():
+    result = analyse_issue(make_issue("Debugger output is confusing", "The debugger prints a confusing stack view."))
+    assert result.category == "other"
+    assert result.priority == "P2"
+
+
+def test_bug_phrase_still_matches_as_a_complete_word():
+    result = analyse_issue(make_issue("Bug: debugger crashes", "The debugger crashes on startup."))
+    assert result.category == "bug"
+    assert result.priority == "P1"
+
+
+def test_debugger_does_not_trigger_p0_security_phrase():
+    result = analyse_issue(make_issue("Debugging security settings", "The debugger output mentions a security vulnerability scanner."))
+    assert result.priority == "P0"
+
+
+def test_unrelated_substrings_do_not_trigger_crash_priority():
+    result = analyse_issue(make_issue("Crash-course documentation", "This is a crash-course on debugging."))
+    assert result.category == "documentation"
+    assert result.priority == "P3"
